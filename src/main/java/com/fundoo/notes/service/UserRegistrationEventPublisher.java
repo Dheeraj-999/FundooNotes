@@ -6,7 +6,8 @@ import com.fundoo.notes.event.UserRegistrationEvent;
 /*
  * Class Name  : UserRegistrationEventPublisher
  * Description : Defines the user registration event publishing contract.
- * Author      : Utakarsh Jain
+ * Author      : Dheeraj Buchha
+ * Note        : Refactored and maintained for FundooNotes (Original: Utkarsh Jain)
  * Date        : 16/11/2026
  */
 

@@ -1,7 +1,16 @@
-
 package com.fundoo.notes.service.impl;
 
+/*
+ * Class Name  : NoteServiceImpl
+ * Description : Production service implementation managing user notes, caching
+ *               invalidation, transactional updates, and status toggling.
+ * Author      : Dheeraj Buchha
+ * Note        : Refactored and maintained for FundooNotes (Original: Utkarsh Jain)
+ * Date        : 27/11/2026
+ */
+
 import com.fundoo.notes.dto.request.NoteRequestDto;
+import com.fundoo.notes.dto.response.LabelResponseDto;
 import com.fundoo.notes.dto.response.NoteResponseDto;
 import com.fundoo.notes.entity.Note;
 import com.fundoo.notes.entity.User;
@@ -20,21 +29,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import com.fundoo.notes.dto.response.LabelResponseDto;
-
-/*
- * Class Name  : NoteServiceImpl
- * Description : Implements note creation, retrieval and
- *               state update operations using JWT and caching.
- * Author      : Utakarsh Jain
- * Date        : 16/11/2026
- */
 
 @Service
 public class NoteServiceImpl implements NoteService {
 
-    private static final Logger logger =
-            LoggerFactory.getLogger(NoteServiceImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(NoteServiceImpl.class);
 
     private final NoteRepository noteRepository;
     private final UserRepository userRepository;
@@ -53,189 +52,143 @@ public class NoteServiceImpl implements NoteService {
     @Override
     @Transactional
     @CacheEvict(value = "notes", allEntries = true)
-    public NoteResponseDto createNote(
-            NoteRequestDto requestDto,
-            String token) {
+    public NoteResponseDto createNote(NoteRequestDto noteRequest, String authorizationToken) {
+        logger.info("Initiating note creation workflow");
+        User authenticatedUser = extractAuthenticatedUser(authorizationToken);
 
-        logger.info("Note creation process started");
-
-        User user = findUserFromToken(token);
-
-        Note note = new Note();
-        note.setTitle(requestDto.getTitle());
-        note.setDescription(requestDto.getDescription());
-        note.setUser(user);
-
-        Note savedNote = noteRepository.save(note);
-
-        logger.info(
-                "Note created successfully. Note ID: {}, User ID: {}",
-                savedNote.getId(),
-                user.getId()
+        Note noteEntity = new Note(
+                noteRequest.getTitle().trim(),
+                noteRequest.getDescription(),
+                authenticatedUser
         );
 
-        return mapToResponse(savedNote);
+        Note persistedNote = noteRepository.save(noteEntity);
+        logger.info("Successfully persisted Note ID: {} for User ID: {}",
+                persistedNote.getId(), authenticatedUser.getId());
+
+        return convertToResponseDto(persistedNote);
     }
 
     @Override
     @Transactional(readOnly = true)
-    @Cacheable(value = "notes", key = "#root.target.getUserIdFromToken(#p0)")
-    public List<NoteResponseDto> getAllNotes(String token) {
-
+    @Cacheable(value = "notes", key = "#root.target.getUserIdFromToken(#authorizationToken)")
+    public List<NoteResponseDto> getAllNotes(String authorizationToken) {
         logger.info("Fetching notes for authenticated user");
+        User authenticatedUser = extractAuthenticatedUser(authorizationToken);
 
-        User user = findUserFromToken(token);
+        List<Note> userNotes = noteRepository.findByUserId(authenticatedUser.getId());
 
-        List<Note> notes = noteRepository.findByUserId(user.getId());
-
-        logger.debug(
-                "Retrieved {} notes for User ID: {}",
-                notes.size(),
-                user.getId()
-        );
-
-        return notes.stream()
-                .map(this::mapToResponse)
+        return userNotes.stream()
+                .map(this::convertToResponseDto)
                 .toList();
     }
 
     @Override
     @Transactional
     @CacheEvict(value = "notes", allEntries = true)
-    public NoteResponseDto togglePin(Long noteId, String token) {
+    public NoteResponseDto togglePin(Long noteId, String authorizationToken) {
+        logger.info("Toggling pin status for Note ID: {}", noteId);
+        Note targetNote = findAndValidateNoteOwnership(noteId, authorizationToken);
 
-        logger.info("Pin update requested for Note ID: {}", noteId);
+        targetNote.setPinned(!targetNote.isPinned());
+        Note updatedNote = noteRepository.save(targetNote);
+        logger.info("Note ID: {} pin status changed to: {}", noteId, updatedNote.isPinned());
 
-        Note note = findNoteForUser(noteId, token);
-        note.setPinned(!note.isPinned());
-
-        Note updatedNote = noteRepository.save(note);
-
-        logger.info("Pin state updated for Note ID: {}", noteId);
-
-        return mapToResponse(updatedNote);
+        return convertToResponseDto(updatedNote);
     }
 
     @Override
     @Transactional
     @CacheEvict(value = "notes", allEntries = true)
-    public NoteResponseDto toggleArchive(Long noteId, String token) {
+    public NoteResponseDto toggleArchive(Long noteId, String authorizationToken) {
+        logger.info("Toggling archive status for Note ID: {}", noteId);
+        Note targetNote = findAndValidateNoteOwnership(noteId, authorizationToken);
 
-        logger.info("Archive update requested for Note ID: {}", noteId);
+        targetNote.setArchived(!targetNote.isArchived());
+        if (targetNote.isArchived()) {
+            targetNote.setPinned(false);
+        }
 
-        Note note = findNoteForUser(noteId, token);
-        note.setArchived(!note.isArchived());
+        Note updatedNote = noteRepository.save(targetNote);
+        logger.info("Note ID: {} archive status changed to: {}", noteId, updatedNote.isArchived());
 
-        Note updatedNote = noteRepository.save(note);
-
-        logger.info("Archive state updated for Note ID: {}", noteId);
-
-        return mapToResponse(updatedNote);
+        return convertToResponseDto(updatedNote);
     }
 
     @Override
     @Transactional
     @CacheEvict(value = "notes", allEntries = true)
-    public NoteResponseDto toggleTrash(Long noteId, String token) {
+    public NoteResponseDto toggleTrash(Long noteId, String authorizationToken) {
+        logger.info("Toggling trash status for Note ID: {}", noteId);
+        Note targetNote = findAndValidateNoteOwnership(noteId, authorizationToken);
 
-        logger.info("Trash update requested for Note ID: {}", noteId);
+        targetNote.setTrashed(!targetNote.isTrashed());
+        if (targetNote.isTrashed()) {
+            targetNote.setPinned(false);
+        }
 
-        Note note = findNoteForUser(noteId, token);
-        note.setTrashed(!note.isTrashed());
+        Note updatedNote = noteRepository.save(targetNote);
+        logger.info("Note ID: {} trash status changed to: {}", noteId, updatedNote.isTrashed());
 
-        Note updatedNote = noteRepository.save(note);
-
-        logger.info("Trash state updated for Note ID: {}", noteId);
-
-        return mapToResponse(updatedNote);
+        return convertToResponseDto(updatedNote);
     }
 
-    /*
-     * Returns authenticated user's ID for the cache key.
-     */
-    public Long getUserIdFromToken(String token) {
-        return findUserFromToken(token).getId();
+    public Long getUserIdFromToken(String authorizationToken) {
+        return extractAuthenticatedUser(authorizationToken).getId();
     }
 
-    private Note findNoteForUser(Long noteId, String token) {
+    private Note findAndValidateNoteOwnership(Long noteId, String authorizationToken) {
+        User authenticatedUser = extractAuthenticatedUser(authorizationToken);
 
-        User user = findUserFromToken(token);
-
-        Note note = noteRepository.findById(noteId)
+        Note targetNote = noteRepository.findById(noteId)
                 .orElseThrow(() -> {
-                    logger.warn("Note not found. Note ID: {}", noteId);
+                    logger.warn("Note not found with ID: {}", noteId);
                     return new NoteNotFoundException("Note not found");
                 });
 
-        if (!note.getUser().getId().equals(user.getId())) {
-
-            logger.warn(
-                    "Unauthorized note modification attempt. Note ID: {}, User ID: {}",
-                    noteId,
-                    user.getId()
-            );
-
+        if (!targetNote.getUser().getId().equals(authenticatedUser.getId())) {
+            logger.warn("Unauthorized modification attempt: Note ID: {}, Requester User ID: {}",
+                    noteId, authenticatedUser.getId());
             throw new NoteNotFoundException("Note not found");
         }
 
-        return note;
+        return targetNote;
     }
 
-    private User findUserFromToken(String token) {
-
-        if (token == null || token.isBlank()) {
-
-            logger.warn("Authorization token is missing");
-
-            throw new InvalidCredentialsException(
-                    "Authorization token is required");
+    private User extractAuthenticatedUser(String authorizationToken) {
+        if (authorizationToken == null || authorizationToken.isBlank()) {
+            logger.warn("Authentication failed: Missing Authorization token");
+            throw new InvalidCredentialsException("Authorization token is required");
         }
 
-        String jwt = token.startsWith("Bearer ")
-                ? token.substring(7).trim()
-                : token.trim();
+        String rawJwt = authorizationToken.startsWith("Bearer ")
+                ? authorizationToken.substring(7).trim()
+                : authorizationToken.trim();
 
-        if (!tokenService.isTokenValid(jwt)) {
-
-            logger.warn("Invalid or expired JWT");
-
-            throw new InvalidCredentialsException(
-                    "Invalid or expired token");
+        if (!tokenService.isTokenValid(rawJwt)) {
+            logger.warn("Authentication failed: Invalid or expired JWT token");
+            throw new InvalidCredentialsException("Invalid or expired token");
         }
 
-        String email = tokenService.extractSubject(jwt);
-
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new InvalidCredentialsException(
-                        "User associated with token not found"));
-
-        logger.debug(
-                "JWT authentication successful for User ID: {}",
-                user.getId()
-        );
-
-        return user;
+        String userEmail = tokenService.extractSubject(rawJwt);
+        return userRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new InvalidCredentialsException("User associated with token not found"));
     }
 
-    private NoteResponseDto mapToResponse(Note note) {
-
-        List<LabelResponseDto> labels = note.getLabels()
+    private NoteResponseDto convertToResponseDto(Note noteEntity) {
+        List<LabelResponseDto> associatedLabels = noteEntity.getLabels()
                 .stream()
-                .map(label -> new LabelResponseDto(
-                        label.getId(),
-                        label.getName()
-                ))
+                .map(label -> new LabelResponseDto(label.getId(), label.getName()))
                 .toList();
 
         return new NoteResponseDto(
-                note.getId(),
-                note.getTitle(),
-                note.getDescription(),
-                note.isPinned(),
-                note.isArchived(),
-                note.isTrashed(),
-                labels
+                noteEntity.getId(),
+                noteEntity.getTitle(),
+                noteEntity.getDescription(),
+                noteEntity.isPinned(),
+                noteEntity.isArchived(),
+                noteEntity.isTrashed(),
+                associatedLabels
         );
     }
-
 }

@@ -17,7 +17,8 @@ import java.util.Date;
  * Class Name  : JwtTokenService
  * Description : Generates and validates signed JWT tokens
  *               using an HMAC SHA signing key.
- * Author      : Utakarsh Jain
+ * Author      : Dheeraj Buchha
+ * Note        : Refactored and maintained for FundooNotes (Original: Utkarsh Jain)
  * Date        : 14/11/2026
  */
 @Service

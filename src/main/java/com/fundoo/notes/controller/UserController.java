@@ -1,5 +1,12 @@
-
 package com.fundoo.notes.controller;
+
+/*
+ * Class Name  : UserController
+ * Description : Exposes REST endpoints for user registration and JWT authentication.
+ * Author      : Dheeraj Buchha
+ * Note        : Refactored and maintained for FundooNotes (Original: Utkarsh Jain)
+ * Date        : 27/11/2026
+ */
 
 import com.fundoo.notes.dto.request.LoginRequestDto;
 import com.fundoo.notes.dto.request.UserRegisterRequestDto;
@@ -11,43 +18,45 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-/*
- * Class Name  : UserController
- * Description : Exposes REST endpoints for user registration
- *               and login operations.
- * Author      : Utakarsh Jain
- * Date        : 14/11/2026
- */
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
 
     private final UserService userService;
 
-    // Constructor injection of the user service.
     public UserController(UserService userService) {
         this.userService = userService;
     }
 
-    // Registers a new user and returns HTTP 201.
+    /**
+     * Registers a new user account with encrypted credentials.
+     *
+     * @param registrationRequest validated user registration parameters
+     * @return HTTP 201 Created with saved user details
+     */
     @PostMapping("/register")
     public ResponseEntity<UserResponseDto> register(
-            @Valid @RequestBody UserRegisterRequestDto requestDto) {
+            @Valid @RequestBody UserRegisterRequestDto registrationRequest) {
 
-        UserResponseDto response = userService.register(requestDto);
+        UserResponseDto registeredUser = userService.register(registrationRequest);
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(response);
+                .body(registeredUser);
     }
 
-    // Authenticates the user and returns a JWT.
+    /**
+     * Authenticates user credentials and issues a signed JSON Web Token (JWT).
+     *
+     * @param loginRequest validated email and raw password
+     * @return HTTP 200 OK with JWT token and success status
+     */
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDto> login(
-            @Valid @RequestBody LoginRequestDto requestDto) {
+            @Valid @RequestBody LoginRequestDto loginRequest) {
 
-        LoginResponseDto response = userService.login(requestDto);
+        LoginResponseDto loginResponse = userService.login(loginRequest);
 
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(loginResponse);
     }
 }

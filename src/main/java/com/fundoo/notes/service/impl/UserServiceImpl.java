@@ -1,5 +1,14 @@
-
 package com.fundoo.notes.service.impl;
+
+/*
+ * Class Name  : UserServiceImpl
+ * Description : Core service implementation managing user lifecycle, credential
+ *               encryption with BCrypt, asynchronous registration event dispatching,
+ *               and secure JWT generation.
+ * Author      : Dheeraj Buchha
+ * Note        : Refactored and maintained for FundooNotes (Original: Utkarsh Jain)
+ * Date        : 27/11/2026
+ */
 
 import com.fundoo.notes.dto.request.LoginRequestDto;
 import com.fundoo.notes.dto.request.UserRegisterRequestDto;
@@ -18,110 +27,92 @@ import com.fundoo.notes.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-
-/*
- * Class Name  : UserServiceImpl
- * Description : Implements user registration and login,
- *               including password verification and JWT creation.
- * Author      : Utakarsh Jain
- * Date        : 16/11/2026
- */
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class UserServiceImpl implements UserService {
 
-    private static final Logger logger =
-            LoggerFactory.getLogger(UserServiceImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 
     private final UserRepository userRepository;
     private final PasswordService passwordService;
     private final TokenService tokenService;
-    private final UserRegistrationEventPublisher eventPublisher;
+    private final UserRegistrationEventPublisher registrationEventPublisher;
 
     public UserServiceImpl(
             UserRepository userRepository,
             PasswordService passwordService,
             TokenService tokenService,
-            UserRegistrationEventPublisher eventPublisher) {
+            UserRegistrationEventPublisher registrationEventPublisher) {
 
         this.userRepository = userRepository;
         this.passwordService = passwordService;
         this.tokenService = tokenService;
-        this.eventPublisher = eventPublisher;
+        this.registrationEventPublisher = registrationEventPublisher;
     }
 
     @Override
-    public UserResponseDto register(UserRegisterRequestDto requestDto) {
+    @Transactional
+    public UserResponseDto register(UserRegisterRequestDto registrationRequest) {
+        String userEmail = registrationRequest.getEmail().trim().toLowerCase();
+        logger.info("Initiating user registration workflow for email: {}", userEmail);
 
-        logger.info("User registration started for email: {}",
-                requestDto.getEmail());
-
-        if (userRepository.findByEmail(requestDto.getEmail()).isPresent()) {
-            logger.warn("Registration failed: email already exists: {}",
-                    requestDto.getEmail());
+        if (userRepository.findByEmail(userEmail).isPresent()) {
+            logger.warn("Registration rejected - duplicate email detected: {}", userEmail);
             throw new DuplicateEmailException("Email is already registered");
         }
 
-        User user = new User();
-        user.setFirstName(requestDto.getFirstName());
-        user.setEmail(requestDto.getEmail());
-        user.setPassword(
-                passwordService.encodePassword(requestDto.getPassword())
+        String encryptedPassword = passwordService.encodePassword(registrationRequest.getPassword());
+        User newUser = new User(
+                registrationRequest.getFirstName().trim(),
+                userEmail,
+                encryptedPassword
         );
 
-        User savedUser = userRepository.save(user);
+        User persistedUser = userRepository.save(newUser);
+        logger.info("User registered and persisted with generated ID: {}", persistedUser.getId());
 
-        logger.info("User registered successfully. User ID: {}",
-                savedUser.getId());
-
-        UserRegistrationEvent event = new UserRegistrationEvent(
-                savedUser.getId(),
-                savedUser.getFirstName(),
-                savedUser.getEmail()
+        // Dispatch asynchronous notification event via message broker
+        UserRegistrationEvent registrationEvent = new UserRegistrationEvent(
+                persistedUser.getId(),
+                persistedUser.getFirstName(),
+                persistedUser.getEmail()
         );
-
-        eventPublisher.publish(event);
-
-        logger.info("User registration event published for user ID: {}",
-                savedUser.getId());
+        registrationEventPublisher.publish(registrationEvent);
+        logger.info("Published asynchronous registration event for user ID: {}", persistedUser.getId());
 
         return new UserResponseDto(
-                savedUser.getId(),
-                savedUser.getFirstName(),
-                savedUser.getEmail()
+                persistedUser.getId(),
+                persistedUser.getFirstName(),
+                persistedUser.getEmail()
         );
     }
 
     @Override
-    public LoginResponseDto login(LoginRequestDto requestDto) {
+    @Transactional(readOnly = true)
+    public LoginResponseDto login(LoginRequestDto loginRequest) {
+        String normalizedEmail = loginRequest.getEmail().trim().toLowerCase();
+        logger.info("Processing login authentication attempt for: {}", normalizedEmail);
 
-        logger.info("Login attempt received for email: {}",
-                requestDto.getEmail());
-
-        User user = userRepository.findByEmail(requestDto.getEmail())
+        User targetUser = userRepository.findByEmail(normalizedEmail)
                 .orElseThrow(() -> {
-                    logger.warn("Login failed: account not found for email: {}",
-                            requestDto.getEmail());
-                    return new InvalidCredentialsException(
-                            "Invalid email or password");
+                    logger.warn("Authentication failed - user not found for email: {}", normalizedEmail);
+                    return new InvalidCredentialsException("Invalid email or password");
                 });
 
-        boolean passwordMatches = passwordService.matchesPassword(
-                requestDto.getPassword(),
-                user.getPassword()
+        boolean isPasswordValid = passwordService.matchesPassword(
+                loginRequest.getPassword(),
+                targetUser.getPassword()
         );
 
-        if (!passwordMatches) {
-            logger.warn("Login failed: invalid password for email: {}",
-                    requestDto.getEmail());
-            throw new InvalidCredentialsException(
-                    "Invalid email or password");
+        if (!isPasswordValid) {
+            logger.warn("Authentication failed - invalid password supplied for email: {}", normalizedEmail);
+            throw new InvalidCredentialsException("Invalid email or password");
         }
 
-        String token = tokenService.generateToken(user.getEmail());
+        String jwtAuthToken = tokenService.generateToken(targetUser.getEmail());
+        logger.info("Authentication successful - issued JWT token for user ID: {}", targetUser.getId());
 
-        logger.info("Login successful for user ID: {}", user.getId());
-
-        return new LoginResponseDto(token, "Login successful");
+        return new LoginResponseDto(jwtAuthToken, "Login successful");
     }
 }

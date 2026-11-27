@@ -10,7 +10,8 @@ import java.util.List;
  * Class Name  : NoteService
  * Description : Defines business operations for creating,
  *               retrieving and updating user notes.
- * Author      : Utakarsh Jain
+ * Author      : Dheeraj Buchha
+ * Note        : Refactored and maintained for FundooNotes (Original: Utkarsh Jain)
  * Date        : 16/11/2026
  */
 

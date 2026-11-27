@@ -1,5 +1,13 @@
-
 package com.fundoo.notes.controller;
+
+/*
+ * Class Name  : LabelController
+ * Description : Exposes REST APIs for creating, updating, listing, and assigning
+ *               user labels to personal notes.
+ * Author      : Dheeraj Buchha
+ * Note        : Refactored and maintained for FundooNotes (Original: Utkarsh Jain)
+ * Date        : 27/11/2026
+ */
 
 import com.fundoo.notes.dto.request.LabelRequestDto;
 import com.fundoo.notes.dto.response.LabelResponseDto;
@@ -13,13 +21,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-/*
- * Class Name  : LabelController
- * Description : Exposes REST APIs for managing user labels.
- * Author      : Utakarsh Jain
- * Date        : 25/11/2026
- */
-
 @RestController
 @RequestMapping("/api/labels")
 public class LabelController {
@@ -30,52 +31,78 @@ public class LabelController {
         this.labelService = labelService;
     }
 
-    // Creates a label for the authenticated user.
+    /**
+     * Creates a unique label for the authenticated user.
+     *
+     * @param labelRequest validated label name
+     * @param token        JWT authorization token
+     * @return HTTP 201 Created with label details
+     */
     @PostMapping
     public ResponseEntity<LabelResponseDto> createLabel(
-            @Valid @RequestBody LabelRequestDto request,
+            @Valid @RequestBody LabelRequestDto labelRequest,
             @RequestHeader("Authorization") String token) {
 
-        LabelResponseDto response =
-                labelService.createLabel(token, request);
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        LabelResponseDto createdLabel = labelService.createLabel(token, labelRequest);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdLabel);
     }
 
-    // Renames a label belonging to the authenticated user.
+    /**
+     * Renames an existing label belonging to the authenticated user.
+     *
+     * @param labelId      target label ID
+     * @param labelRequest new label name
+     * @param token        JWT authorization token
+     * @return HTTP 200 OK with updated label
+     */
     @PutMapping("/{labelId}")
     public ResponseEntity<LabelResponseDto> updateLabel(
             @PathVariable Long labelId,
-            @Valid @RequestBody LabelRequestDto request,
+            @Valid @RequestBody LabelRequestDto labelRequest,
             @RequestHeader("Authorization") String token) {
 
-        return ResponseEntity.ok(
-                labelService.updateLabel(labelId, token, request)
-        );
+        LabelResponseDto updatedLabel = labelService.updateLabel(labelId, token, labelRequest);
+        return ResponseEntity.ok(updatedLabel);
     }
 
-    // Retrieves all labels belonging to the authenticated user.
+    /**
+     * Retrieves all labels created by the authenticated user.
+     *
+     * @param token JWT authorization token
+     * @return HTTP 200 OK with list of user labels
+     */
     @GetMapping
     public ResponseEntity<List<LabelResponseDto>> getAllLabels(
             @RequestHeader("Authorization") String token) {
 
-        return ResponseEntity.ok(
-                labelService.getAllLabels(token)
-        );
+        List<LabelResponseDto> userLabels = labelService.getAllLabels(token);
+        return ResponseEntity.ok(userLabels);
     }
 
-    // Deletes a label belonging to the authenticated user.
+    /**
+     * Deletes a label owned by the authenticated user.
+     *
+     * @param labelId target label ID
+     * @param token   JWT authorization token
+     * @return HTTP 204 No Content
+     */
     @DeleteMapping("/{labelId}")
     public ResponseEntity<Void> deleteLabel(
             @PathVariable Long labelId,
             @RequestHeader("Authorization") String token) {
 
         labelService.deleteLabel(labelId, token);
-
         return ResponseEntity.noContent().build();
     }
 
-    // Assigns a label to a note.
+    /**
+     * Attaches a label to a specific note.
+     *
+     * @param labelId label ID
+     * @param noteId  note ID
+     * @param token   JWT authorization token
+     * @return HTTP 204 No Content
+     */
     @PostMapping("/{labelId}/notes/{noteId}")
     public ResponseEntity<Void> assignLabelToNote(
             @PathVariable Long labelId,
@@ -83,11 +110,17 @@ public class LabelController {
             @RequestHeader("Authorization") String token) {
 
         labelService.assignLabelToNote(labelId, noteId, token);
-
         return ResponseEntity.noContent().build();
     }
 
-    // Removes a label from a note.
+    /**
+     * Detaches a label from a specific note.
+     *
+     * @param labelId label ID
+     * @param noteId  note ID
+     * @param token   JWT authorization token
+     * @return HTTP 204 No Content
+     */
     @DeleteMapping("/{labelId}/notes/{noteId}")
     public ResponseEntity<Void> removeLabelFromNote(
             @PathVariable Long labelId,
@@ -95,8 +128,6 @@ public class LabelController {
             @RequestHeader("Authorization") String token) {
 
         labelService.removeLabelFromNote(labelId, noteId, token);
-
         return ResponseEntity.noContent().build();
     }
-
 }

@@ -12,7 +12,8 @@ import java.util.Optional;
 /*
  * Class Name  : ReminderRepository
  * Description : Provides database operations for user reminders.
- * Author      : Utakarsh Jain
+ * Author      : Dheeraj Buchha
+ * Note        : Refactored and maintained for FundooNotes (Original: Utkarsh Jain)
  * Date        : 26/11/2026
  */
 

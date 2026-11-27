@@ -10,7 +10,8 @@ import java.util.List;
 /*
  * Class Name  : ReminderService
  * Description : Defines business operations for user reminders.
- * Author      : Utakarsh Jain
+ * Author      : Dheeraj Buchha
+ * Note        : Refactored and maintained for FundooNotes (Original: Utkarsh Jain)
  * Date        : 26/11/2026
  */
 

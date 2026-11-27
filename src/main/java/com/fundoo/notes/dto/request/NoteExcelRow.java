@@ -4,7 +4,8 @@ package com.fundoo.notes.dto.request;
 /*
  * Class Name  : NoteExcelRow
  * Description : Holds one row of note data imported from Excel.
- * Author      : Utkarsh Jain
+ * Author      : Dheeraj Buchha
+ * Note        : Refactored and maintained for FundooNotes (Original: Utkarsh Jain)
  * Date        : 16/11/2026
  */
 

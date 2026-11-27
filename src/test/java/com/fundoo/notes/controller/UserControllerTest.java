@@ -21,7 +21,8 @@ import static org.mockito.Mockito.*;
  * Class Name  : UserControllerTest
  * Description : Tests REST controller responses for registration
  *               and login operations.
- * Author      : Utakarsh Jain
+ * Author      : Dheeraj Buchha
+ * Note        : Refactored and maintained for FundooNotes (Original: Utkarsh Jain)
  * Date        : 14/11/2026
  */
 @ExtendWith(MockitoExtension.class)

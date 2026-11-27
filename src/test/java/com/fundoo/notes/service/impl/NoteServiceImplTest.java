@@ -29,7 +29,8 @@ import com.fundoo.notes.exception.NoteNotFoundException;
  * Class Name  : NoteServiceImplTest
  * Description : Tests note creation and retrieval business logic,
  *               including JWT validation and user identification.
- * Author      : Utakarsh Jain
+ * Author      : Dheeraj Buchha
+ * Note        : Refactored and maintained for FundooNotes (Original: Utkarsh Jain)
  * Date        : 16/11/2026
  */
 

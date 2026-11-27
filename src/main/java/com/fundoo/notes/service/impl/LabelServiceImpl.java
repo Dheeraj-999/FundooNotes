@@ -1,5 +1,13 @@
-
 package com.fundoo.notes.service.impl;
+
+/*
+ * Class Name  : LabelServiceImpl
+ * Description : Production service managing user-defined note labels, ensuring
+ *               user-level uniqueness, transactional safety, and cache synchronization.
+ * Author      : Dheeraj Buchha
+ * Note        : Refactored and maintained for FundooNotes (Original: Utkarsh Jain)
+ * Date        : 27/11/2026
+ */
 
 import com.fundoo.notes.dto.request.LabelRequestDto;
 import com.fundoo.notes.dto.response.LabelResponseDto;
@@ -24,18 +32,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-/*
- * Class Name  : LabelServiceImpl
- * Description : Implements user-specific label management using JWT.
- * Author      : Utakarsh Jain
- * Date        : 25/11/2026
- */
-
 @Service
 public class LabelServiceImpl implements LabelService {
 
-    private static final Logger logger =
-            LoggerFactory.getLogger(LabelServiceImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(LabelServiceImpl.class);
 
     private final LabelRepository labelRepository;
     private final NoteRepository noteRepository;
@@ -56,203 +56,153 @@ public class LabelServiceImpl implements LabelService {
 
     @Override
     @Transactional
-    public LabelResponseDto createLabel(
-            String token,
-            LabelRequestDto request) {
+    public LabelResponseDto createLabel(String authorizationToken, LabelRequestDto labelRequest) {
+        User authenticatedUser = extractAuthenticatedUser(authorizationToken);
+        String normalizedLabelName = labelRequest.getName().trim();
 
-        User user = findUserFromToken(token);
-        String name = request.getName().trim();
-
-        if (labelRepository.findByNameIgnoreCaseAndUserId(
-                name, user.getId()).isPresent()) {
-
-            throw new DuplicateLabelException(
-                    "Label already exists");
+        if (labelRepository.findByNameIgnoreCaseAndUserId(normalizedLabelName, authenticatedUser.getId()).isPresent()) {
+            throw new DuplicateLabelException("Label already exists");
         }
 
-        Label label = new Label(name, user);
-        Label savedLabel = labelRepository.save(label);
+        Label newLabel = new Label(normalizedLabelName, authenticatedUser);
+        Label persistedLabel = labelRepository.save(newLabel);
 
-        logger.info(
-                "Label created successfully. Label ID: {}, User ID: {}",
-                savedLabel.getId(),
-                user.getId()
-        );
+        logger.info("Label successfully created. Label ID: {}, User ID: {}",
+                persistedLabel.getId(), authenticatedUser.getId());
 
-        return mapToResponse(savedLabel);
+        return convertToResponseDto(persistedLabel);
     }
 
     @Override
     @Transactional
     @CacheEvict(value = "notes", allEntries = true)
-    public LabelResponseDto updateLabel(
-            Long labelId,
-            String token,
-            LabelRequestDto request) {
+    public LabelResponseDto updateLabel(Long labelId, String authorizationToken, LabelRequestDto labelRequest) {
+        User authenticatedUser = extractAuthenticatedUser(authorizationToken);
+        String normalizedLabelName = labelRequest.getName().trim();
 
-        User user = findUserFromToken(token);
-        String name = request.getName().trim();
+        Label targetLabel = labelRepository.findById(labelId)
+                .orElseThrow(() -> new LabelNotFoundException("Label not found"));
 
-        Label label = labelRepository.findById(labelId)
-                .orElseThrow(() -> new LabelNotFoundException(
-                        "Label not found"));
-
-        if (!label.getUser().getId().equals(user.getId())) {
+        if (!targetLabel.getUser().getId().equals(authenticatedUser.getId())) {
             throw new LabelNotFoundException("Label not found");
         }
 
         if (labelRepository.existsByNameIgnoreCaseAndUserIdAndIdNot(
-                name, user.getId(), labelId)) {
-
-            throw new DuplicateLabelException(
-                    "Label already exists");
+                normalizedLabelName, authenticatedUser.getId(), labelId)) {
+            throw new DuplicateLabelException("Label already exists");
         }
 
-        label.setName(name);
-        Label savedLabel = labelRepository.save(label);
+        targetLabel.setName(normalizedLabelName);
+        Label updatedLabel = labelRepository.save(targetLabel);
 
-        logger.info(
-                "Label renamed successfully. Label ID: {}, User ID: {}",
-                labelId,
-                user.getId()
-        );
-
-        return mapToResponse(savedLabel);
+        logger.info("Label updated successfully. Label ID: {}, User ID: {}", labelId, authenticatedUser.getId());
+        return convertToResponseDto(updatedLabel);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<LabelResponseDto> getAllLabels(String token) {
+    public List<LabelResponseDto> getAllLabels(String authorizationToken) {
+        User authenticatedUser = extractAuthenticatedUser(authorizationToken);
 
-        User user = findUserFromToken(token);
-
-        return labelRepository.findByUserId(user.getId())
+        return labelRepository.findByUserId(authenticatedUser.getId())
                 .stream()
-                .map(this::mapToResponse)
+                .map(this::convertToResponseDto)
                 .toList();
     }
 
     @Override
     @Transactional
     @CacheEvict(value = "notes", allEntries = true)
-    public void deleteLabel(Long labelId, String token) {
+    public void deleteLabel(Long labelId, String authorizationToken) {
+        User authenticatedUser = extractAuthenticatedUser(authorizationToken);
 
-        User user = findUserFromToken(token);
+        Label targetLabel = labelRepository.findById(labelId)
+                .orElseThrow(() -> new LabelNotFoundException("Label not found"));
 
-        Label label = labelRepository.findById(labelId)
-                .orElseThrow(() -> new LabelNotFoundException(
-                        "Label not found"));
-
-        if (!label.getUser().getId().equals(user.getId())) {
+        if (!targetLabel.getUser().getId().equals(authenticatedUser.getId())) {
             throw new LabelNotFoundException("Label not found");
         }
 
-        noteRepository.deleteLabelMappings(labelId);
-        labelRepository.delete(label);
-
-        logger.info(
-                "Label deleted successfully. Label ID: {}, User ID: {}",
-                labelId,
-                user.getId()
-        );
-    }
-
-    // Validates the JWT and retrieves the authenticated user.
-    private User findUserFromToken(String token) {
-
-        if (token == null || token.isBlank()) {
-            throw new InvalidCredentialsException(
-                    "Authorization token is required");
+        List<Note> notesWithLabel = noteRepository.findByUserId(authenticatedUser.getId());
+        for (Note note : notesWithLabel) {
+            if (note.getLabels().remove(targetLabel)) {
+                noteRepository.save(note);
+            }
         }
 
-        String jwt = token.startsWith("Bearer ")
-                ? token.substring(7).trim()
-                : token.trim();
-
-        if (!tokenService.isTokenValid(jwt)) {
-            throw new InvalidCredentialsException(
-                    "Invalid or expired token");
-        }
-
-        String email = tokenService.extractSubject(jwt);
-
-        return userRepository.findByEmail(email)
-                .orElseThrow(() -> new InvalidCredentialsException(
-                        "User associated with token not found"));
-    }
-
-    // Converts a Label entity into its response DTO.
-    private LabelResponseDto mapToResponse(Label label) {
-
-        return new LabelResponseDto(
-                label.getId(),
-                label.getName()
-        );
+        labelRepository.delete(targetLabel);
+        logger.info("Label deleted successfully. Label ID: {}, User ID: {}", labelId, authenticatedUser.getId());
     }
 
     @Override
     @Transactional
     @CacheEvict(value = "notes", allEntries = true)
-    public void assignLabelToNote(
-            Long labelId,
-            Long noteId,
-            String token) {
+    public void assignLabelToNote(Long labelId, Long noteId, String authorizationToken) {
+        User authenticatedUser = extractAuthenticatedUser(authorizationToken);
 
-        User user = findUserFromToken(token);
+        Label targetLabel = labelRepository.findById(labelId)
+                .orElseThrow(() -> new LabelNotFoundException("Label not found"));
 
-        Label label = labelRepository.findById(labelId)
-                .orElseThrow(() -> new LabelNotFoundException(
-                        "Label not found"));
-
-        if (!label.getUser().getId().equals(user.getId())) {
+        if (!targetLabel.getUser().getId().equals(authenticatedUser.getId())) {
             throw new LabelNotFoundException("Label not found");
         }
 
-        Note note = noteRepository.findByIdAndUserId(
-                noteId, user.getId()
-        ).orElseThrow(() -> new NoteNotFoundException(
-                "Note not found"));
+        Note targetNote = noteRepository.findById(noteId)
+                .orElseThrow(() -> new NoteNotFoundException("Note not found"));
 
-        note.getLabels().add(label);
-        noteRepository.save(note);
+        if (!targetNote.getUser().getId().equals(authenticatedUser.getId())) {
+            throw new NoteNotFoundException("Note not found");
+        }
 
-        logger.info(
-                "Label {} assigned to Note {}",
-                labelId,
-                noteId
-        );
+        targetNote.getLabels().add(targetLabel);
+        noteRepository.save(targetNote);
+        logger.info("Assigned Label ID: {} to Note ID: {}", labelId, noteId);
     }
 
     @Override
     @Transactional
     @CacheEvict(value = "notes", allEntries = true)
-    public void removeLabelFromNote(
-            Long labelId,
-            Long noteId,
-            String token) {
+    public void removeLabelFromNote(Long labelId, Long noteId, String authorizationToken) {
+        User authenticatedUser = extractAuthenticatedUser(authorizationToken);
 
-        User user = findUserFromToken(token);
+        Label targetLabel = labelRepository.findById(labelId)
+                .orElseThrow(() -> new LabelNotFoundException("Label not found"));
 
-        Label label = labelRepository.findById(labelId)
-                .orElseThrow(() -> new LabelNotFoundException(
-                        "Label not found"));
-
-        if (!label.getUser().getId().equals(user.getId())) {
+        if (!targetLabel.getUser().getId().equals(authenticatedUser.getId())) {
             throw new LabelNotFoundException("Label not found");
         }
 
-        Note note = noteRepository.findByIdAndUserId(
-                noteId, user.getId()
-        ).orElseThrow(() -> new NoteNotFoundException(
-                "Note not found"));
+        Note targetNote = noteRepository.findById(noteId)
+                .orElseThrow(() -> new NoteNotFoundException("Note not found"));
 
-        note.getLabels().remove(label);
-        noteRepository.save(note);
+        if (!targetNote.getUser().getId().equals(authenticatedUser.getId())) {
+            throw new NoteNotFoundException("Note not found");
+        }
 
-        logger.info(
-                "Label {} removed from Note {}",
-                labelId,
-                noteId
-        );
+        targetNote.getLabels().remove(targetLabel);
+        noteRepository.save(targetNote);
+        logger.info("Removed Label ID: {} from Note ID: {}", labelId, noteId);
+    }
+
+    private User extractAuthenticatedUser(String authorizationToken) {
+        if (authorizationToken == null || authorizationToken.isBlank()) {
+            throw new InvalidCredentialsException("Authorization token is required");
+        }
+
+        String rawJwt = authorizationToken.startsWith("Bearer ")
+                ? authorizationToken.substring(7).trim()
+                : authorizationToken.trim();
+
+        if (!tokenService.isTokenValid(rawJwt)) {
+            throw new InvalidCredentialsException("Invalid or expired token");
+        }
+
+        String userEmail = tokenService.extractSubject(rawJwt);
+        return userRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new InvalidCredentialsException("User associated with token not found"));
+    }
+
+    private LabelResponseDto convertToResponseDto(Label labelEntity) {
+        return new LabelResponseDto(labelEntity.getId(), labelEntity.getName());
     }
 }

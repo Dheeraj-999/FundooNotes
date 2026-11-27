@@ -5,7 +5,8 @@ package com.fundoo.notes.dto.response;
  * Class Name  : UserResponseDto
  * Description : Represents the safe user information returned
  *               by the application after registration.
- * Author      : Utakarsh Jain
+ * Author      : Dheeraj Buchha
+ * Note        : Refactored and maintained for FundooNotes (Original: Utkarsh Jain)
  * Date        : 14/11/2026
  */
 

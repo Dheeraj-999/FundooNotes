@@ -9,7 +9,8 @@ import static org.junit.jupiter.api.Assertions.*;
  * Class Name  : ResponseDtoTest
  * Description : Tests registration and login response DTO
  *               constructors, getters, and setters.
- * Author      : Utakarsh Jain
+ * Author      : Dheeraj Buchha
+ * Note        : Refactored and maintained for FundooNotes (Original: Utkarsh Jain)
  * Date        : 14/11/2026
  */
 

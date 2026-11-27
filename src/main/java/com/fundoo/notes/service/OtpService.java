@@ -4,7 +4,8 @@ package com.fundoo.notes.service;
 /*
  * Class Name  : OtpService
  * Description : Defines OTP generation and verification operations.
- * Author      : Utakarsh Jain
+ * Author      : Dheeraj Buchha
+ * Note        : Refactored and maintained for FundooNotes (Original: Utkarsh Jain)
  * Date        : 16/11/2026
  */
 

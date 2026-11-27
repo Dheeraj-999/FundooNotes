@@ -9,7 +9,8 @@
  *
  * These tests do not require a database connection.
  *
- * Author : Utakarsh Jain
+ * Author      : Dheeraj Buchha
+ * Note        : Refactored and maintained for FundooNotes (Original: Utkarsh Jain)
  * Date   : 14/11/2026
  */
 
@@ -30,13 +31,13 @@ class UserTest {
     void shouldCreateUserSuccessfully() {
 
         User user = new User(
-                "Utkarsh",
-                "utkarsh@gmail.com",
+                "Dheeraj",
+                "dheeraj@gmail.com",
                 "password123"
         );
 
-        assertEquals("Utkarsh", user.getFirstName());
-        assertEquals("utkarsh@gmail.com", user.getEmail());
+        assertEquals("Dheeraj", user.getFirstName());
+        assertEquals("dheeraj@gmail.com", user.getEmail());
         assertEquals("password123", user.getPassword());
     }
 
@@ -51,13 +52,13 @@ class UserTest {
         User user = new User();
 
         user.setId(1L);
-        user.setFirstName("Utkarsh");
-        user.setEmail("utkarsh@gmail.com");
+        user.setFirstName("Dheeraj");
+        user.setEmail("dheeraj@gmail.com");
         user.setPassword("password123");
 
         assertEquals(1L, user.getId());
-        assertEquals("Utkarsh", user.getFirstName());
-        assertEquals("utkarsh@gmail.com", user.getEmail());
+        assertEquals("Dheeraj", user.getFirstName());
+        assertEquals("dheeraj@gmail.com", user.getEmail());
         assertEquals("password123", user.getPassword());
     }
 

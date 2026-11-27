@@ -3,7 +3,8 @@
  * Class Name  : NoteRepositoryTest
  * Description : Tests NoteRepository database operations,
  *               user-specific retrieval and note searching.
- * Author      : Utakarsh Jain
+ * Author      : Dheeraj Buchha
+ * Note        : Refactored and maintained for FundooNotes (Original: Utkarsh Jain)
  * Date        : 14/11/2026
  */
 
@@ -25,7 +26,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(
-        replace = AutoConfigureTestDatabase.Replace.NONE
+        replace = AutoConfigureTestDatabase.Replace.ANY
 )
 class NoteRepositoryTest {
 
@@ -40,9 +41,9 @@ class NoteRepositoryTest {
 
         User user = new User();
 
-        user.setFirstName("Utakarsh");
+        user.setFirstName("Dheeraj");
         user.setEmail(
-                "utakarsh-" + UUID.randomUUID() + "@example.com"
+                "dheeraj-" + UUID.randomUUID() + "@example.com"
         );
         user.setPassword("testPassword");
 

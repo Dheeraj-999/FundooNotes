@@ -9,7 +9,8 @@ import java.util.HashSet;
  * Class Name  : Note
  * Description : Represents a note created by a user and maps
  *               note details, labels and lifecycle states to the database.
- * Author      : Utakarsh Jain
+ * Author      : Dheeraj Buchha
+ * Note        : Refactored and maintained for FundooNotes (Original: Utkarsh Jain)
  * Date        : 25/11/2026
  */
 

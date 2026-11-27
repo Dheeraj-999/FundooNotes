@@ -11,7 +11,8 @@ import org.springframework.stereotype.Component;
 /*
  * Class Name  : RabbitMQReminderConsumer
  * Description : Consumes reminder events from RabbitMQ.
- * Author      : Utakarsh Jain
+ * Author      : Dheeraj Buchha
+ * Note        : Refactored and maintained for FundooNotes (Original: Utkarsh Jain)
  * Date        : 16/11/2026
  */
 

@@ -4,7 +4,8 @@
  * Description : Tests centralized exception handling for duplicate
  *               email, invalid credentials, validation failures
  *               and unexpected exceptions.
- * Author      : Utakarsh Jain
+ * Author      : Dheeraj Buchha
+ * Note        : Refactored and maintained for FundooNotes (Original: Utkarsh Jain)
  * Date        : 14/11/2026
  */
 

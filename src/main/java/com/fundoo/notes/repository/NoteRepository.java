@@ -3,7 +3,8 @@
  * Class Name  : NoteRepository
  * Description : Provides database operations for Note entities,
  *               including user-specific retrieval and filtering.
- * Author      : Utakarsh Jain
+ * Author      : Dheeraj Buchha
+ * Note        : Refactored and maintained for FundooNotes (Original: Utkarsh Jain)
  * Date        : 25/11/2026
  */
 

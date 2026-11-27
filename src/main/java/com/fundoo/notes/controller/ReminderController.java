@@ -1,5 +1,13 @@
-
 package com.fundoo.notes.controller;
+
+/*
+ * Class Name  : ReminderController
+ * Description : Exposes REST APIs for scheduling, viewing, updating, and removing
+ *               note reminders with RabbitMQ notification dispatching.
+ * Author      : Dheeraj Buchha
+ * Note        : Refactored and maintained for FundooNotes (Original: Utkarsh Jain)
+ * Date        : 27/11/2026
+ */
 
 import com.fundoo.notes.dto.request.ReminderRequestDto;
 import com.fundoo.notes.dto.request.ReminderUpdateRequestDto;
@@ -14,13 +22,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-/*
- * Class Name  : ReminderController
- * Description : Exposes REST APIs for managing user reminders.
- * Author      : Utakarsh Jain
- * Date        : 26/11/2026
- */
-
 @RestController
 @RequestMapping("/api/reminders")
 public class ReminderController {
@@ -31,47 +32,67 @@ public class ReminderController {
         this.reminderService = reminderService;
     }
 
-    // Schedules a reminder for an authenticated user's note.
+    /**
+     * Schedules a future reminder for a note.
+     *
+     * @param reminderRequest reminder configuration details
+     * @param token           JWT authorization token
+     * @return HTTP 201 Created with reminder response
+     */
     @PostMapping
     public ResponseEntity<ReminderResponseDto> createReminder(
-            @Valid @RequestBody ReminderRequestDto request,
+            @Valid @RequestBody ReminderRequestDto reminderRequest,
             @RequestHeader("Authorization") String token) {
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(
-                reminderService.createReminder(token, request)
-        );
+        ReminderResponseDto createdReminder = reminderService.createReminder(token, reminderRequest);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdReminder);
     }
 
-    // Retrieves all reminders belonging to the authenticated user.
+    /**
+     * Retrieves all scheduled reminders for the authenticated user.
+     *
+     * @param token JWT authorization token
+     * @return HTTP 200 OK with list of reminders
+     */
     @GetMapping
     public ResponseEntity<List<ReminderResponseDto>> getAllReminders(
             @RequestHeader("Authorization") String token) {
 
-        return ResponseEntity.ok(
-                reminderService.getAllReminders(token)
-        );
+        List<ReminderResponseDto> userReminders = reminderService.getAllReminders(token);
+        return ResponseEntity.ok(userReminders);
     }
 
-    // Updates the time of an authenticated user's reminder.
+    /**
+     * Updates an existing reminder's trigger timestamp.
+     *
+     * @param reminderId      target reminder ID
+     * @param reminderRequest updated trigger timestamp
+     * @param token           JWT authorization token
+     * @return HTTP 200 OK with updated reminder
+     */
     @PutMapping("/{reminderId}")
     public ResponseEntity<ReminderResponseDto> updateReminder(
             @PathVariable Long reminderId,
-            @Valid @RequestBody ReminderUpdateRequestDto request,
+            @Valid @RequestBody ReminderUpdateRequestDto reminderRequest,
             @RequestHeader("Authorization") String token) {
 
-        return ResponseEntity.ok(
-                reminderService.updateReminder(reminderId, token, request)
-        );
+        ReminderResponseDto updatedReminder = reminderService.updateReminder(reminderId, token, reminderRequest);
+        return ResponseEntity.ok(updatedReminder);
     }
 
-    // Deletes an authenticated user's reminder.
+    /**
+     * Cancels and deletes an active reminder.
+     *
+     * @param reminderId target reminder ID
+     * @param token      JWT authorization token
+     * @return HTTP 204 No Content
+     */
     @DeleteMapping("/{reminderId}")
     public ResponseEntity<Void> deleteReminder(
             @PathVariable Long reminderId,
             @RequestHeader("Authorization") String token) {
 
         reminderService.deleteReminder(reminderId, token);
-
         return ResponseEntity.noContent().build();
     }
 }

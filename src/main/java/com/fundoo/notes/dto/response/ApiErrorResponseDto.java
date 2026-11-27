@@ -3,7 +3,8 @@
  * Description : Represents a standardized API error response
  *               containing timestamp, status, error, message,
  *               request path and validation errors.
- * Author      : Utakarsh Jain
+ * Author      : Dheeraj Buchha
+ * Note        : Refactored and maintained for FundooNotes (Original: Utkarsh Jain)
  * Date        : 14/11/2026
  */
 

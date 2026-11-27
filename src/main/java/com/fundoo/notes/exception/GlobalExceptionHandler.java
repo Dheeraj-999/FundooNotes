@@ -1,5 +1,14 @@
-
 package com.fundoo.notes.exception;
+
+/*
+ * Class Name  : GlobalExceptionHandler
+ * Description : Centralized @RestControllerAdvice handling exceptions application-wide,
+ *               transforming domain and validation exceptions into standardized RFC-compliant
+ *               error responses.
+ * Author      : Dheeraj Buchha
+ * Note        : Refactored and maintained for FundooNotes (Original: Utkarsh Jain)
+ * Date        : 27/11/2026
+ */
 
 import com.fundoo.notes.dto.response.ApiErrorResponseDto;
 
@@ -18,31 +27,17 @@ import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-/*
- * Class Name  : GlobalExceptionHandler
- * Description : Centrally handles application exceptions and
- *               returns standardized HTTP error responses.
- * Author      : Utakarsh Jain
- * Date        : 26/11/2026
- */
-
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    private static final Logger logger =
-            LoggerFactory.getLogger(GlobalExceptionHandler.class);
+    private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     @ExceptionHandler(DuplicateEmailException.class)
     public ResponseEntity<ApiErrorResponseDto> handleDuplicateEmail(
             DuplicateEmailException exception,
             HttpServletRequest request) {
 
-        return buildResponse(
-                HttpStatus.CONFLICT,
-                exception.getMessage(),
-                request,
-                null
-        );
+        return constructErrorResponse(HttpStatus.CONFLICT, exception.getMessage(), request, null);
     }
 
     @ExceptionHandler(NoteNotFoundException.class)
@@ -50,12 +45,7 @@ public class GlobalExceptionHandler {
             NoteNotFoundException exception,
             HttpServletRequest request) {
 
-        return buildResponse(
-                HttpStatus.NOT_FOUND,
-                exception.getMessage(),
-                request,
-                null
-        );
+        return constructErrorResponse(HttpStatus.NOT_FOUND, exception.getMessage(), request, null);
     }
 
     @ExceptionHandler(InvalidCredentialsException.class)
@@ -63,12 +53,7 @@ public class GlobalExceptionHandler {
             InvalidCredentialsException exception,
             HttpServletRequest request) {
 
-        return buildResponse(
-                HttpStatus.UNAUTHORIZED,
-                exception.getMessage(),
-                request,
-                null
-        );
+        return constructErrorResponse(HttpStatus.UNAUTHORIZED, exception.getMessage(), request, null);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -76,23 +61,12 @@ public class GlobalExceptionHandler {
             MethodArgumentNotValidException exception,
             HttpServletRequest request) {
 
-        Map<String, String> validationErrors = new LinkedHashMap<>();
-
-        for (FieldError fieldError :
-                exception.getBindingResult().getFieldErrors()) {
-
-            validationErrors.put(
-                    fieldError.getField(),
-                    fieldError.getDefaultMessage()
-            );
+        Map<String, String> fieldValidationErrors = new LinkedHashMap<>();
+        for (FieldError fieldError : exception.getBindingResult().getFieldErrors()) {
+            fieldValidationErrors.put(fieldError.getField(), fieldError.getDefaultMessage());
         }
 
-        return buildResponse(
-                HttpStatus.BAD_REQUEST,
-                "Validation failed",
-                request,
-                validationErrors
-        );
+        return constructErrorResponse(HttpStatus.BAD_REQUEST, "Validation failed", request, fieldValidationErrors);
     }
 
     @ExceptionHandler(DuplicateLabelException.class)
@@ -100,12 +74,7 @@ public class GlobalExceptionHandler {
             DuplicateLabelException exception,
             HttpServletRequest request) {
 
-        return buildResponse(
-                HttpStatus.CONFLICT,
-                exception.getMessage(),
-                request,
-                null
-        );
+        return constructErrorResponse(HttpStatus.CONFLICT, exception.getMessage(), request, null);
     }
 
     @ExceptionHandler(LabelNotFoundException.class)
@@ -113,12 +82,7 @@ public class GlobalExceptionHandler {
             LabelNotFoundException exception,
             HttpServletRequest request) {
 
-        return buildResponse(
-                HttpStatus.NOT_FOUND,
-                exception.getMessage(),
-                request,
-                null
-        );
+        return constructErrorResponse(HttpStatus.NOT_FOUND, exception.getMessage(), request, null);
     }
 
     @ExceptionHandler(ReminderNotFoundException.class)
@@ -126,12 +90,7 @@ public class GlobalExceptionHandler {
             ReminderNotFoundException exception,
             HttpServletRequest request) {
 
-        return buildResponse(
-                HttpStatus.NOT_FOUND,
-                exception.getMessage(),
-                request,
-                null
-        );
+        return constructErrorResponse(HttpStatus.NOT_FOUND, exception.getMessage(), request, null);
     }
 
     @ExceptionHandler(DuplicateReminderException.class)
@@ -139,12 +98,7 @@ public class GlobalExceptionHandler {
             DuplicateReminderException exception,
             HttpServletRequest request) {
 
-        return buildResponse(
-                HttpStatus.CONFLICT,
-                exception.getMessage(),
-                request,
-                null
-        );
+        return constructErrorResponse(HttpStatus.CONFLICT, exception.getMessage(), request, null);
     }
 
     @ExceptionHandler(Exception.class)
@@ -152,37 +106,25 @@ public class GlobalExceptionHandler {
             Exception exception,
             HttpServletRequest request) {
 
-        logger.error(
-                "Unexpected exception at {}: ",
-                request.getRequestURI(),
-                exception
-        );
-
-        return buildResponse(
-                HttpStatus.INTERNAL_SERVER_ERROR,
-                "An unexpected error occurred",
-                request,
-                null
-        );
+        logger.error("Unhandled exception intercepted at URI: {}", request.getRequestURI(), exception);
+        return constructErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "An unexpected error occurred", request, null);
     }
 
-    private ResponseEntity<ApiErrorResponseDto> buildResponse(
-            HttpStatus status,
-            String message,
+    private ResponseEntity<ApiErrorResponseDto> constructErrorResponse(
+            HttpStatus httpStatus,
+            String errorMessage,
             HttpServletRequest request,
-            Map<String, String> validationErrors) {
+            Map<String, String> fieldErrors) {
 
-        ApiErrorResponseDto response = new ApiErrorResponseDto(
+        ApiErrorResponseDto errorDto = new ApiErrorResponseDto(
                 LocalDateTime.now(),
-                status.value(),
-                status.getReasonPhrase(),
-                message,
+                httpStatus.value(),
+                httpStatus.getReasonPhrase(),
+                errorMessage,
                 request.getRequestURI(),
-                validationErrors
+                fieldErrors
         );
 
-        return ResponseEntity
-                .status(status)
-                .body(response);
+        return ResponseEntity.status(httpStatus).body(errorDto);
     }
 }

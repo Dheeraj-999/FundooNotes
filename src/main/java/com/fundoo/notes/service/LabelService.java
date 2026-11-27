@@ -9,7 +9,8 @@ import java.util.List;
 /*
  * Interface Name : LabelService
  * Description    : Defines operations for managing user labels.
- * Author         : Utakarsh Jain
+ * Author      : Dheeraj Buchha
+ * Note        : Refactored and maintained for FundooNotes (Original: Utkarsh Jain)
  * Date           : 25/11/2026
  */
 

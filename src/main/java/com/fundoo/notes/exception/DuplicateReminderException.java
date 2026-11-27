@@ -4,7 +4,8 @@ package com.fundoo.notes.exception;
 /*
  * Class Name  : DuplicateReminderException
  * Description : Handles reminders that already exist for a note.
- * Author      : Utakarsh Jain
+ * Author      : Dheeraj Buchha
+ * Note        : Refactored and maintained for FundooNotes (Original: Utkarsh Jain)
  * Date        : 26/11/2026
  */
 

@@ -9,7 +9,8 @@ import org.springframework.stereotype.Service;
  * Class Name  : PasswordServiceImpl
  * Description : Implements password hashing and verification
  *               using Spring Security's BCrypt encoder.
- * Author      : Utakarsh Jain
+ * Author      : Dheeraj Buchha
+ * Note        : Refactored and maintained for FundooNotes (Original: Utkarsh Jain)
  * Date        : 14/11/2026
  */
 @Service

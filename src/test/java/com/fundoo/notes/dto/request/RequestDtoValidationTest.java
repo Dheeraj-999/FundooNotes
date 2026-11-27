@@ -15,7 +15,8 @@ import static org.junit.jupiter.api.Assertions.*;
  * Class Name  : RequestDtoValidationTest
  * Description : Tests registration and login DTO validation,
  *               including blank fields and invalid email formats.
- * Author      : Utakarsh Jain
+ * Author      : Dheeraj Buchha
+ * Note        : Refactored and maintained for FundooNotes (Original: Utkarsh Jain)
  * Date        : 14/11/2026
  */
 

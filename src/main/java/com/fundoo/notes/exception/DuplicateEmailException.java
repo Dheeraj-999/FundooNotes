@@ -2,7 +2,8 @@
  * Class Name  : DuplicateEmailException
  * Description : Custom exception thrown when a user registers
  *               with an email address that already exists.
- * Author      : Utakarsh Jain
+ * Author      : Dheeraj Buchha
+ * Note        : Refactored and maintained for FundooNotes (Original: Utkarsh Jain)
  * Date        : 14/11/2026
  */
 

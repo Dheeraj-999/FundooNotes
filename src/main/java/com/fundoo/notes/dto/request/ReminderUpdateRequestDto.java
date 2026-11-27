@@ -9,7 +9,8 @@ import java.time.LocalDateTime;
 /*
  * Class Name  : ReminderUpdateRequestDto
  * Description : Validates reminder time updates.
- * Author      : Utakarsh Jain
+ * Author      : Dheeraj Buchha
+ * Note        : Refactored and maintained for FundooNotes (Original: Utkarsh Jain)
  * Date        : 26/11/2026
  */
 

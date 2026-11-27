@@ -5,7 +5,8 @@ package com.fundoo.notes.exception;
  * Class Name  : NoteNotFoundException
  * Description : Thrown when a requested note does not exist
  *               or does not belong to the authenticated user.
- * Author      : Utakarsh Jain
+ * Author      : Dheeraj Buchha
+ * Note        : Refactored and maintained for FundooNotes (Original: Utkarsh Jain)
  * Date        : 16/11/2026
  */
 

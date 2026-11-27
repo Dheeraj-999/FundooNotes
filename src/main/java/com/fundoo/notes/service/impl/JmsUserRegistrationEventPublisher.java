@@ -13,7 +13,8 @@ import org.springframework.stereotype.Service;
 /*
  * Class Name  : JmsUserRegistrationEventPublisher
  * Description : Publishes user registration events to ActiveMQ.
- * Author      : Utakarsh Jain
+ * Author      : Dheeraj Buchha
+ * Note        : Refactored and maintained for FundooNotes (Original: Utkarsh Jain)
  * Date        : 16/11/2026
  */
 

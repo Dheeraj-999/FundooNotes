@@ -8,7 +8,8 @@ import jakarta.validation.constraints.NotBlank;
  * Class Name  : UserRegisterRequestDto
  * Description : Stores and validates the user registration
  *               details received from the client.
- * Author      : Utakarsh Jain
+ * Author      : Dheeraj Buchha
+ * Note        : Refactored and maintained for FundooNotes (Original: Utkarsh Jain)
  * Date        : 14/11/2026
  */
 

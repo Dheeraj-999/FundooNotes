@@ -10,7 +10,8 @@
  * The tests use Spring Boot and JPA integration to interact
  * with the configured database.
  *
- * Author : Utakarsh Jain
+ * Author      : Dheeraj Buchha
+ * Note        : Refactored and maintained for FundooNotes (Original: Utkarsh Jain)
  * Date   : 14/11/2026
  */
 
@@ -45,7 +46,7 @@ class UserRepositoryTest {
         String email = UUID.randomUUID() + "@gmail.com";
 
         User user = new User(
-                "Utkarsh",
+                "Dheeraj",
                 email,
                 "password123"
         );
@@ -53,7 +54,7 @@ class UserRepositoryTest {
         User savedUser = userRepository.save(user);
 
         assertNotNull(savedUser.getId());
-        assertEquals("Utkarsh", savedUser.getFirstName());
+        assertEquals("Dheeraj", savedUser.getFirstName());
         assertEquals(email, savedUser.getEmail());
     }
 
@@ -67,7 +68,7 @@ class UserRepositoryTest {
         String email = UUID.randomUUID() + "@gmail.com";
 
         User user = new User(
-                "Utkarsh",
+                "Dheeraj",
                 email,
                 "password123"
         );
@@ -106,7 +107,7 @@ class UserRepositoryTest {
         String email = UUID.randomUUID() + "@gmail.com";
 
         User user = new User(
-                "Utkarsh",
+                "Dheeraj",
                 email,
                 "password123"
         );

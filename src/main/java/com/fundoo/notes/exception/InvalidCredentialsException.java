@@ -2,7 +2,8 @@
  * Class Name  : InvalidCredentialsException
  * Description : Custom exception thrown when login credentials
  *               are incorrect.
- * Author      : Utakarsh Jain
+ * Author      : Dheeraj Buchha
+ * Note        : Refactored and maintained for FundooNotes (Original: Utkarsh Jain)
  * Date        : 14/11/2026
  */
 

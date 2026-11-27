@@ -4,7 +4,8 @@
  * Description : Tests registration and login business logic,
  *               including password encoding, duplicate email
  *               validation and JWT token generation.
- * Author      : Utakarsh Jain
+ * Author      : Dheeraj Buchha
+ * Note        : Refactored and maintained for FundooNotes (Original: Utkarsh Jain)
  * Date        : 14/11/2026
  */
 
@@ -64,8 +65,8 @@ class UserServiceImplTest {
     void shouldRegisterUserWithEncodedPassword() {
 
         UserRegisterRequestDto request = new UserRegisterRequestDto();
-        request.setFirstName("Utakarsh");
-        request.setEmail("utakarsh@example.com");
+        request.setFirstName("Dheeraj");
+        request.setEmail("dheeraj@example.com");
         request.setPassword("Password123");
 
         // Mock email lookup to indicate that the email is new.
@@ -78,8 +79,8 @@ class UserServiceImplTest {
 
         User savedUser = new User();
         savedUser.setId(1L);
-        savedUser.setFirstName("Utakarsh");
-        savedUser.setEmail("utakarsh@example.com");
+        savedUser.setFirstName("Dheeraj");
+        savedUser.setEmail("dheeraj@example.com");
         savedUser.setPassword("$2a$10$encodedPasswordHash");
 
         // Mock database save operation.
@@ -90,8 +91,8 @@ class UserServiceImplTest {
 
         // Verify registration response.
         assertEquals(1L, response.getId());
-        assertEquals("Utakarsh", response.getFirstName());
-        assertEquals("utakarsh@example.com", response.getEmail());
+        assertEquals("Dheeraj", response.getFirstName());
+        assertEquals("dheeraj@example.com", response.getEmail());
 
         // Verify password encoding and repository save.
         verify(passwordService).encodePassword("Password123");
@@ -106,8 +107,8 @@ class UserServiceImplTest {
     void shouldRejectDuplicateEmail() {
 
         UserRegisterRequestDto request = new UserRegisterRequestDto();
-        request.setFirstName("Utakarsh");
-        request.setEmail("utakarsh@example.com");
+        request.setFirstName("Dheeraj");
+        request.setEmail("dheeraj@example.com");
         request.setPassword("Password123");
 
         // Mock an existing user with the same email.
@@ -133,13 +134,13 @@ class UserServiceImplTest {
     void shouldLoginSuccessfullyWithCorrectPassword() {
 
         LoginRequestDto request = new LoginRequestDto();
-        request.setEmail("utakarsh@example.com");
+        request.setEmail("dheeraj@example.com");
         request.setPassword("Password123");
 
         User user = new User();
         user.setId(1L);
-        user.setFirstName("Utakarsh");
-        user.setEmail("utakarsh@example.com");
+        user.setFirstName("Dheeraj");
+        user.setEmail("dheeraj@example.com");
         user.setPassword("$2a$10$encodedPasswordHash");
 
         // Mock user lookup.
@@ -153,7 +154,7 @@ class UserServiceImplTest {
         )).thenReturn(true);
 
         // Mock JWT generation.
-        when(tokenService.generateToken("utakarsh@example.com"))
+        when(tokenService.generateToken("dheeraj@example.com"))
                 .thenReturn("sample.jwt.token");
 
         LoginResponseDto response = userService.login(request);
@@ -168,7 +169,7 @@ class UserServiceImplTest {
                 "$2a$10$encodedPasswordHash"
         );
 
-        verify(tokenService).generateToken("utakarsh@example.com");
+        verify(tokenService).generateToken("dheeraj@example.com");
     }
 
     /*
@@ -207,11 +208,11 @@ class UserServiceImplTest {
     void shouldRejectLoginForIncorrectPassword() {
 
         LoginRequestDto request = new LoginRequestDto();
-        request.setEmail("utakarsh@example.com");
+        request.setEmail("dheeraj@example.com");
         request.setPassword("WrongPassword");
 
         User user = new User();
-        user.setEmail("utakarsh@example.com");
+        user.setEmail("dheeraj@example.com");
         user.setPassword("$2a$10$encodedPasswordHash");
 
         // Mock successful user lookup.

@@ -3,7 +3,8 @@
  * Class Name  : NoteTest
  * Description : Tests Note entity constructors, getters, setters
  *               and default lifecycle state values.
- * Author      : Utakarsh Jain
+ * Author      : Dheeraj Buchha
+ * Note        : Refactored and maintained for FundooNotes (Original: Utkarsh Jain)
  * Date        : 14/11/2026
  */
 

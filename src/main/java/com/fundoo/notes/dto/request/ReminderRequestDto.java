@@ -8,7 +8,8 @@ import java.time.LocalDateTime;
 /*
  * Class Name  : ReminderRequestDto
  * Description : Validates reminder scheduling requests.
- * Author      : Utakarsh Jain
+ * Author      : Dheeraj Buchha
+ * Note        : Refactored and maintained for FundooNotes (Original: Utkarsh Jain)
  * Date        : 16/11/2026
  */
 

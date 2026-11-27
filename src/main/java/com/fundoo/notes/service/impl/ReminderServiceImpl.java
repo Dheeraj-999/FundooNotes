@@ -1,5 +1,13 @@
-
 package com.fundoo.notes.service.impl;
+
+/*
+ * Class Name  : ReminderServiceImpl
+ * Description : Production service managing note reminders, asynchronous event
+ *               dispatching via RabbitMQ, ownership validation, and scheduling.
+ * Author      : Dheeraj Buchha
+ * Note        : Refactored and maintained for FundooNotes (Original: Utkarsh Jain)
+ * Date        : 27/11/2026
+ */
 
 import com.fundoo.notes.dto.request.ReminderRequestDto;
 import com.fundoo.notes.dto.request.ReminderUpdateRequestDto;
@@ -26,180 +34,137 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-/*
- * Class Name  : ReminderServiceImpl
- * Description : Implements reminder scheduling and management using JWT.
- * Author      : Utakarsh Jain
- * Date        : 26/11/2026
- */
-
 @Service
 public class ReminderServiceImpl implements ReminderService {
 
-    private static final Logger logger =
-            LoggerFactory.getLogger(ReminderServiceImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(ReminderServiceImpl.class);
 
     private final ReminderRepository reminderRepository;
     private final NoteRepository noteRepository;
     private final UserRepository userRepository;
     private final TokenService tokenService;
-    private final ReminderEventPublisher eventPublisher;
+    private final ReminderEventPublisher reminderEventPublisher;
 
     public ReminderServiceImpl(
             ReminderRepository reminderRepository,
             NoteRepository noteRepository,
             UserRepository userRepository,
             TokenService tokenService,
-            ReminderEventPublisher eventPublisher) {
+            ReminderEventPublisher reminderEventPublisher) {
 
         this.reminderRepository = reminderRepository;
         this.noteRepository = noteRepository;
         this.userRepository = userRepository;
         this.tokenService = tokenService;
-        this.eventPublisher = eventPublisher;
+        this.reminderEventPublisher = reminderEventPublisher;
     }
 
     @Override
     @Transactional
-    public ReminderResponseDto createReminder(
-            String token,
-            ReminderRequestDto request) {
+    public ReminderResponseDto createReminder(String authorizationToken, ReminderRequestDto reminderRequest) {
+        User authenticatedUser = extractAuthenticatedUser(authorizationToken);
 
-        User user = findUserFromToken(token);
+        Note targetNote = noteRepository.findByIdAndUserId(
+                reminderRequest.getNoteId(),
+                authenticatedUser.getId()
+        ).orElseThrow(() -> new NoteNotFoundException("Note not found"));
 
-        Note note = noteRepository.findByIdAndUserId(
-                request.getNoteId(),
-                user.getId()
-        ).orElseThrow(() -> new NoteNotFoundException(
-                "Note not found"));
-
-        if (reminderRepository.findByNoteIdAndUserId(
-                note.getId(), user.getId()).isPresent()) {
-
-            throw new DuplicateReminderException(
-                    "Reminder already exists for this note");
+        if (reminderRepository.findByNoteIdAndUserId(targetNote.getId(), authenticatedUser.getId()).isPresent()) {
+            throw new DuplicateReminderException("Reminder already exists for this note");
         }
 
-        Reminder reminder = reminderRepository.save(
-                new Reminder(note, user, request.getReminderTime()));
-
-        publishEvent(reminder, user);
-
-        logger.info(
-                "Reminder created successfully. Reminder ID: {}, User ID: {}",
-                reminder.getId(),
-                user.getId()
+        Reminder newReminder = new Reminder(
+                targetNote,
+                authenticatedUser,
+                reminderRequest.getReminderTime()
         );
 
-        return mapToResponse(reminder);
+        Reminder persistedReminder = reminderRepository.save(newReminder);
+        publishReminderEvent(persistedReminder, authenticatedUser);
+
+        logger.info("Reminder created successfully. Reminder ID: {}, User ID: {}",
+                persistedReminder.getId(), authenticatedUser.getId());
+
+        return convertToResponseDto(persistedReminder);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<ReminderResponseDto> getAllReminders(String token) {
+    public List<ReminderResponseDto> getAllReminders(String authorizationToken) {
+        User authenticatedUser = extractAuthenticatedUser(authorizationToken);
 
-        User user = findUserFromToken(token);
-
-        return reminderRepository
-                .findByUserIdOrderByReminderTimeAsc(user.getId())
+        return reminderRepository.findByUserIdOrderByReminderTimeAsc(authenticatedUser.getId())
                 .stream()
-                .map(this::mapToResponse)
+                .map(this::convertToResponseDto)
                 .toList();
     }
 
     @Override
     @Transactional
-    public ReminderResponseDto updateReminder(
-            Long reminderId,
-            String token,
-            ReminderUpdateRequestDto request) {
+    public ReminderResponseDto updateReminder(Long reminderId, String authorizationToken, ReminderUpdateRequestDto reminderRequest) {
+        User authenticatedUser = extractAuthenticatedUser(authorizationToken);
 
-        User user = findUserFromToken(token);
+        Reminder targetReminder = findAndValidateReminderOwnership(reminderId, authenticatedUser);
+        targetReminder.setReminderTime(reminderRequest.getReminderTime());
 
-        Reminder reminder = findReminderForUser(reminderId, user);
-        reminder.setReminderTime(request.getReminderTime());
+        Reminder updatedReminder = reminderRepository.save(targetReminder);
+        publishReminderEvent(updatedReminder, authenticatedUser);
 
-        Reminder updatedReminder = reminderRepository.save(reminder);
-
-        publishEvent(updatedReminder, user);
-
-        logger.info(
-                "Reminder updated successfully. Reminder ID: {}, User ID: {}",
-                reminderId,
-                user.getId()
-        );
-
-        return mapToResponse(updatedReminder);
+        logger.info("Reminder updated successfully. Reminder ID: {}, User ID: {}", reminderId, authenticatedUser.getId());
+        return convertToResponseDto(updatedReminder);
     }
 
     @Override
     @Transactional
-    public void deleteReminder(Long reminderId, String token) {
+    public void deleteReminder(Long reminderId, String authorizationToken) {
+        User authenticatedUser = extractAuthenticatedUser(authorizationToken);
+        Reminder targetReminder = findAndValidateReminderOwnership(reminderId, authenticatedUser);
 
-        User user = findUserFromToken(token);
-        Reminder reminder = findReminderForUser(reminderId, user);
+        reminderRepository.delete(targetReminder);
+        logger.info("Reminder deleted successfully. Reminder ID: {}, User ID: {}", reminderId, authenticatedUser.getId());
+    }
 
-        reminderRepository.delete(reminder);
+    private Reminder findAndValidateReminderOwnership(Long reminderId, User authenticatedUser) {
+        return reminderRepository.findByIdAndUserId(reminderId, authenticatedUser.getId())
+                .orElseThrow(() -> new ReminderNotFoundException("Reminder not found"));
+    }
 
-        logger.info(
-                "Reminder deleted successfully. Reminder ID: {}, User ID: {}",
-                reminderId,
-                user.getId()
+    private void publishReminderEvent(Reminder reminder, User authenticatedUser) {
+        ReminderEvent reminderEvent = new ReminderEvent(
+                authenticatedUser.getId(),
+                reminder.getNote().getId(),
+                authenticatedUser.getEmail(),
+                reminder.getNote().getTitle(),
+                reminder.getReminderTime()
         );
+        reminderEventPublisher.publish(reminderEvent);
+        logger.info("Published reminder dispatch event to RabbitMQ for Note ID: {}", reminder.getNote().getId());
     }
 
-    // Finds a reminder while verifying that it belongs to the user.
-    private Reminder findReminderForUser(Long reminderId, User user) {
-
-        return reminderRepository.findByIdAndUserId(reminderId, user.getId())
-                .orElseThrow(() -> new ReminderNotFoundException(
-                        "Reminder not found"));
-    }
-
-    // Publishes the reminder details to the configured RabbitMQ exchange.
-    private void publishEvent(Reminder reminder, User user) {
-
-        eventPublisher.publish(new ReminderEvent(
-                user.getId(),
-                reminder.getNote().getId(),
-                user.getEmail(),
-                reminder.getNote().getTitle(),
-                reminder.getReminderTime()
-        ));
-    }
-
-    // Validates the JWT and retrieves the authenticated user.
-    private User findUserFromToken(String token) {
-
-        if (token == null || token.isBlank()) {
-            throw new InvalidCredentialsException(
-                    "Authorization token is required");
+    private User extractAuthenticatedUser(String authorizationToken) {
+        if (authorizationToken == null || authorizationToken.isBlank()) {
+            throw new InvalidCredentialsException("Authorization token is required");
         }
 
-        String jwt = token.startsWith("Bearer ")
-                ? token.substring(7).trim()
-                : token.trim();
+        String rawJwt = authorizationToken.startsWith("Bearer ")
+                ? authorizationToken.substring(7).trim()
+                : authorizationToken.trim();
 
-        if (!tokenService.isTokenValid(jwt)) {
-            throw new InvalidCredentialsException(
-                    "Invalid or expired token");
+        if (!tokenService.isTokenValid(rawJwt)) {
+            throw new InvalidCredentialsException("Invalid or expired token");
         }
 
-        String email = tokenService.extractSubject(jwt);
-
-        return userRepository.findByEmail(email)
-                .orElseThrow(() -> new InvalidCredentialsException(
-                        "User associated with token not found"));
+        String userEmail = tokenService.extractSubject(rawJwt);
+        return userRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new InvalidCredentialsException("User associated with token not found"));
     }
 
-    // Converts a Reminder entity into its response DTO.
-    private ReminderResponseDto mapToResponse(Reminder reminder) {
-
+    private ReminderResponseDto convertToResponseDto(Reminder reminderEntity) {
         return new ReminderResponseDto(
-                reminder.getId(),
-                reminder.getNote().getId(),
-                reminder.getNote().getTitle(),
-                reminder.getReminderTime()
+                reminderEntity.getId(),
+                reminderEntity.getNote().getId(),
+                reminderEntity.getNote().getTitle(),
+                reminderEntity.getReminderTime()
         );
     }
 }
