@@ -1,12 +1,12 @@
 # FundooNotes - Advanced Enterprise Note Management Backend
 
 [![Build Status](https://img.shields.io/badge/Build-Passing-brightgreen?style=flat-square&logo=apache-maven)](https://github.com/Dheeraj-999/FundooNotes)
-[![Java Version](https://img.shields.io/badge/Java-21%20LTS-blue?style=flat-square&logo=openjdk)](https://www.oracle.com/java/technologies/downloads/#java21)
-[![Spring Boot](https://img.shields.io/badge/Spring%20Boot-4.1.2-green?style=flat-square&logo=springboot)](https://spring.io/projects/spring-boot)
+![Java Version](https://img.shields.io/badge/Java-21%20LTS-blue?style=flat-square&logo=openjdk)
+![Spring Boot](https://img.shields.io/badge/Spring%20Boot-4.1.2-green?style=flat-square&logo=springboot)
 [![Tests Passing](https://img.shields.io/badge/Tests-97%2F97%20Passing-success?style=flat-square&logo=junit5)](https://github.com/Dheeraj-999/FundooNotes)
-[![Database](https://img.shields.io/badge/Database-MySQL%20%7C%20H2-orange?style=flat-square&logo=mysql)](https://www.mysql.com/)
-[![Message Broker](https://img.shields.io/badge/Messaging-RabbitMQ%20%7C%20ActiveMQ-red?style=flat-square&logo=rabbitmq)](https://www.rabbitmq.com/)
-[![Cache & Key-Value](https://img.shields.io/badge/Cache-Redis-critical?style=flat-square&logo=redis)](https://redis.io/)
+![Database](https://img.shields.io/badge/Database-MySQL%20%7C%20H2-orange?style=flat-square&logo=mysql)
+![Message Broker](https://img.shields.io/badge/Messaging-RabbitMQ%20%7C%20ActiveMQ-red?style=flat-square&logo=rabbitmq)
+![Cache & Key-Value](https://img.shields.io/badge/Cache-Redis-critical?style=flat-square&logo=redis)
 
 ---
 
