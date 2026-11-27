@@ -10,9 +10,7 @@
  * The tests use Spring Boot and JPA integration to interact
  * with the configured database.
  *
- * Author      : Dheeraj Buchha
- * Note        : Refactored and maintained for FundooNotes (Original: Utkarsh Jain)
- * Date   : 14/11/2026
+ * Author      : Dheeraj Buchha * Date   : 14/11/2026
  */
 
 package com.fundoo.notes.repository;

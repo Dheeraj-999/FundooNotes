@@ -7,9 +7,7 @@ import jakarta.validation.constraints.Size;
 /*
  * Class Name  : LabelRequestDto
  * Description : Validates label creation and rename requests.
- * Author      : Dheeraj Buchha
- * Note        : Refactored and maintained for FundooNotes (Original: Utkarsh Jain)
- * Date        : 25/11/2026
+ * Author      : Dheeraj Buchha * Date        : 25/11/2026
  */
 
 public class LabelRequestDto {

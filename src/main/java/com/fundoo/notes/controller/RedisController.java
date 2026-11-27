@@ -4,9 +4,7 @@ package com.fundoo.notes.controller;
  * Class Name  : RedisController
  * Description : Exposes REST endpoints for Redis in-memory key-value caching operations
  *               and Time-To-Live (TTL) OTP generation/verification.
- * Author      : Dheeraj Buchha
- * Note        : Refactored and maintained for FundooNotes (Original: Utkarsh Jain)
- * Date        : 27/11/2026
+ * Author      : Dheeraj Buchha * Date        : 27/11/2026
  */
 
 import com.fundoo.notes.service.OtpService;

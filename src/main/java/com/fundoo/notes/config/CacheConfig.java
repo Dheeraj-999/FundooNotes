@@ -7,9 +7,7 @@ import org.springframework.context.annotation.Configuration;
 /*
  * Class Name  : CacheConfig
  * Description : Enables Spring Cache support.
- * Author      : Dheeraj Buchha
- * Note        : Refactored and maintained for FundooNotes (Original: Utkarsh Jain)
- * Date        : 16/11/2026
+ * Author      : Dheeraj Buchha * Date        : 16/11/2026
  */
 
 @Configuration

@@ -29,9 +29,7 @@ import com.fundoo.notes.exception.NoteNotFoundException;
  * Class Name  : NoteServiceImplTest
  * Description : Tests note creation and retrieval business logic,
  *               including JWT validation and user identification.
- * Author      : Dheeraj Buchha
- * Note        : Refactored and maintained for FundooNotes (Original: Utkarsh Jain)
- * Date        : 16/11/2026
+ * Author      : Dheeraj Buchha * Date        : 16/11/2026
  */
 
 @ExtendWith(MockitoExtension.class)
@@ -60,7 +58,7 @@ class NoteServiceImplTest {
 
         User user = new User();
         user.setId(1L);
-        user.setEmail("utakarsh@example.com");
+        user.setEmail("dheeraj@example.com");
 
         NoteRequestDto request = new NoteRequestDto();
         request.setTitle("My First Note");
@@ -68,9 +66,9 @@ class NoteServiceImplTest {
 
         when(tokenService.isTokenValid(token)).thenReturn(true);
         when(tokenService.extractSubject(token))
-                .thenReturn("utakarsh@example.com");
+                .thenReturn("dheeraj@example.com");
 
-        when(userRepository.findByEmail("utakarsh@example.com"))
+        when(userRepository.findByEmail("dheeraj@example.com"))
                 .thenReturn(Optional.of(user));
 
         // Return the saved note with a generated ID.
@@ -176,7 +174,7 @@ class NoteServiceImplTest {
 
         User user = new User();
         user.setId(1L);
-        user.setEmail("utakarsh@example.com");
+        user.setEmail("dheeraj@example.com");
 
         Note firstNote = new Note();
         firstNote.setId(10L);
@@ -193,9 +191,9 @@ class NoteServiceImplTest {
         when(tokenService.isTokenValid(token)).thenReturn(true);
 
         when(tokenService.extractSubject(token))
-                .thenReturn("utakarsh@example.com");
+                .thenReturn("dheeraj@example.com");
 
-        when(userRepository.findByEmail("utakarsh@example.com"))
+        when(userRepository.findByEmail("dheeraj@example.com"))
                 .thenReturn(Optional.of(user));
 
         when(noteRepository.findByUserId(1L))
@@ -224,14 +222,14 @@ class NoteServiceImplTest {
 
         User user = new User();
         user.setId(1L);
-        user.setEmail("utakarsh@example.com");
+        user.setEmail("dheeraj@example.com");
 
         when(tokenService.isTokenValid(token)).thenReturn(true);
 
         when(tokenService.extractSubject(token))
-                .thenReturn("utakarsh@example.com");
+                .thenReturn("dheeraj@example.com");
 
-        when(userRepository.findByEmail("utakarsh@example.com"))
+        when(userRepository.findByEmail("dheeraj@example.com"))
                 .thenReturn(Optional.of(user));
 
         when(noteRepository.findByUserId(1L))
@@ -253,7 +251,7 @@ class NoteServiceImplTest {
 
         User user = new User();
         user.setId(1L);
-        user.setEmail("utakarsh@example.com");
+        user.setEmail("dheeraj@example.com");
 
         Note note = new Note();
         note.setId(noteId);
@@ -263,9 +261,9 @@ class NoteServiceImplTest {
 
         when(tokenService.isTokenValid(token)).thenReturn(true);
         when(tokenService.extractSubject(token))
-                .thenReturn("utakarsh@example.com");
+                .thenReturn("dheeraj@example.com");
 
-        when(userRepository.findByEmail("utakarsh@example.com"))
+        when(userRepository.findByEmail("dheeraj@example.com"))
                 .thenReturn(Optional.of(user));
 
         when(noteRepository.findById(noteId))
@@ -389,15 +387,15 @@ class NoteServiceImplTest {
 
         User user = new User();
         user.setId(1L);
-        user.setEmail("utakarsh@example.com");
+        user.setEmail("dheeraj@example.com");
 
         when(tokenService.isTokenValid("sample.jwt.token"))
                 .thenReturn(true);
 
         when(tokenService.extractSubject("sample.jwt.token"))
-                .thenReturn("utakarsh@example.com");
+                .thenReturn("dheeraj@example.com");
 
-        when(userRepository.findByEmail("utakarsh@example.com"))
+        when(userRepository.findByEmail("dheeraj@example.com"))
                 .thenReturn(Optional.of(user));
 
         when(noteRepository.findById(100L))
@@ -420,7 +418,7 @@ class NoteServiceImplTest {
 
         User authenticatedUser = new User();
         authenticatedUser.setId(1L);
-        authenticatedUser.setEmail("utakarsh@example.com");
+        authenticatedUser.setEmail("dheeraj@example.com");
 
         User anotherUser = new User();
         anotherUser.setId(2L);
@@ -435,9 +433,9 @@ class NoteServiceImplTest {
                 .thenReturn(true);
 
         when(tokenService.extractSubject("sample.jwt.token"))
-                .thenReturn("utakarsh@example.com");
+                .thenReturn("dheeraj@example.com");
 
-        when(userRepository.findByEmail("utakarsh@example.com"))
+        when(userRepository.findByEmail("dheeraj@example.com"))
                 .thenReturn(Optional.of(authenticatedUser));
 
         when(noteRepository.findById(10L))

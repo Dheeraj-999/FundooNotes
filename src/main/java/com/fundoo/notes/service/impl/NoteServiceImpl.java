@@ -4,9 +4,7 @@ package com.fundoo.notes.service.impl;
  * Class Name  : NoteServiceImpl
  * Description : Production service implementation managing user notes, caching
  *               invalidation, transactional updates, and status toggling.
- * Author      : Dheeraj Buchha
- * Note        : Refactored and maintained for FundooNotes (Original: Utkarsh Jain)
- * Date        : 27/11/2026
+ * Author      : Dheeraj Buchha * Date        : 27/11/2026
  */
 
 import com.fundoo.notes.dto.request.NoteRequestDto;

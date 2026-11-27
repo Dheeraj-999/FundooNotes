@@ -4,9 +4,7 @@ package com.fundoo.notes.controller;
  * Class Name  : LabelController
  * Description : Exposes REST APIs for creating, updating, listing, and assigning
  *               user labels to personal notes.
- * Author      : Dheeraj Buchha
- * Note        : Refactored and maintained for FundooNotes (Original: Utkarsh Jain)
- * Date        : 27/11/2026
+ * Author      : Dheeraj Buchha * Date        : 27/11/2026
  */
 
 import com.fundoo.notes.dto.request.LabelRequestDto;

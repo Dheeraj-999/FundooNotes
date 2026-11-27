@@ -6,9 +6,7 @@ import jakarta.persistence.*;
 /*
  * Class Name  : Label
  * Description : Represents a user-specific label for organizing notes.
- * Author      : Dheeraj Buchha
- * Note        : Refactored and maintained for FundooNotes (Original: Utkarsh Jain)
- * Date        : 25/11/2026
+ * Author      : Dheeraj Buchha * Date        : 25/11/2026
  */
 
 @Entity

@@ -4,9 +4,7 @@ package com.fundoo.notes.service.impl;
  * Class Name  : LabelServiceImpl
  * Description : Production service managing user-defined note labels, ensuring
  *               user-level uniqueness, transactional safety, and cache synchronization.
- * Author      : Dheeraj Buchha
- * Note        : Refactored and maintained for FundooNotes (Original: Utkarsh Jain)
- * Date        : 27/11/2026
+ * Author      : Dheeraj Buchha * Date        : 27/11/2026
  */
 
 import com.fundoo.notes.dto.request.LabelRequestDto;

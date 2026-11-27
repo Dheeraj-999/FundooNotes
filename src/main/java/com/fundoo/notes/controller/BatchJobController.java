@@ -4,9 +4,7 @@ package com.fundoo.notes.controller;
  * Class Name  : BatchJobController
  * Description : REST controller providing manual triggering and monitoring
  *               endpoints for Spring Batch data processing jobs.
- * Author      : Dheeraj Buchha
- * Note        : Refactored and maintained for FundooNotes (Original: Utkarsh Jain)
- * Date        : 27/11/2026
+ * Author      : Dheeraj Buchha * Date        : 27/11/2026
  */
 
 import org.springframework.batch.core.job.Job;

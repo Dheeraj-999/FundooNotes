@@ -5,9 +5,7 @@ package com.fundoo.notes.exception;
  * Description : Centralized @RestControllerAdvice handling exceptions application-wide,
  *               transforming domain and validation exceptions into standardized RFC-compliant
  *               error responses.
- * Author      : Dheeraj Buchha
- * Note        : Refactored and maintained for FundooNotes (Original: Utkarsh Jain)
- * Date        : 27/11/2026
+ * Author      : Dheeraj Buchha * Date        : 27/11/2026
  */
 
 import com.fundoo.notes.dto.response.ApiErrorResponseDto;

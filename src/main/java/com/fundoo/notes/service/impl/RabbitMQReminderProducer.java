@@ -11,9 +11,7 @@ import org.springframework.stereotype.Service;
 /*
  * Class Name  : RabbitMQReminderProducer
  * Description : Publishes reminder events to RabbitMQ.
- * Author      : Dheeraj Buchha
- * Note        : Refactored and maintained for FundooNotes (Original: Utkarsh Jain)
- * Date        : 16/11/2026
+ * Author      : Dheeraj Buchha * Date        : 16/11/2026
  */
 
 @Service

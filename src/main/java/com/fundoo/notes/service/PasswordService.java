@@ -5,9 +5,7 @@ package com.fundoo.notes.service;
  * Class Name  : PasswordService
  * Description : Defines password encoding and verification
  *               operations for the application.
- * Author      : Dheeraj Buchha
- * Note        : Refactored and maintained for FundooNotes (Original: Utkarsh Jain)
- * Date        : 14/11/2026
+ * Author      : Dheeraj Buchha * Date        : 14/11/2026
  */
 public interface PasswordService {
 

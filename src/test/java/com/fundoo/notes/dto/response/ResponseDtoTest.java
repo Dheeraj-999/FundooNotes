@@ -9,9 +9,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * Class Name  : ResponseDtoTest
  * Description : Tests registration and login response DTO
  *               constructors, getters, and setters.
- * Author      : Dheeraj Buchha
- * Note        : Refactored and maintained for FundooNotes (Original: Utkarsh Jain)
- * Date        : 14/11/2026
+ * Author      : Dheeraj Buchha * Date        : 14/11/2026
  */
 
 class ResponseDtoTest {
@@ -21,13 +19,13 @@ class ResponseDtoTest {
     void shouldCreateUserResponseSuccessfully() {
         UserResponseDto dto = new UserResponseDto(
                 1L,
-                "Utakarsh",
-                "utakarsh@example.com"
+                "Dheeraj",
+                "dheeraj@example.com"
         );
 
         assertEquals(1L, dto.getId());
-        assertEquals("Utakarsh", dto.getFirstName());
-        assertEquals("utakarsh@example.com", dto.getEmail());
+        assertEquals("Dheeraj", dto.getFirstName());
+        assertEquals("dheeraj@example.com", dto.getEmail());
     }
 
     // Verifies that registration response setters update fields.

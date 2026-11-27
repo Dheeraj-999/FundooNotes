@@ -24,9 +24,7 @@ import static org.mockito.Mockito.*;
  * Class Name  : NoteControllerTest
  * Description : Tests REST controller responses for note
  *               creation and retrieval operations.
- * Author      : Dheeraj Buchha
- * Note        : Refactored and maintained for FundooNotes (Original: Utkarsh Jain)
- * Date        : 16/11/2026
+ * Author      : Dheeraj Buchha * Date        : 16/11/2026
  */
 
 @ExtendWith(MockitoExtension.class)

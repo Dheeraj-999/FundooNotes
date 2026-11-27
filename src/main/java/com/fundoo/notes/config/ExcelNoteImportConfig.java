@@ -5,9 +5,7 @@ package com.fundoo.notes.config;
  * Class Name  : ExcelNoteImportConfig
  * Description : Configures Spring Batch job for importing notes
  *               from Excel files into the database.
- * Author      : Dheeraj Buchha
- * Note        : Refactored and maintained for FundooNotes (Original: Utkarsh Jain)
- * Date        : 16/11/2026
+ * Author      : Dheeraj Buchha * Date        : 16/11/2026
  */
 
 import com.fundoo.notes.dto.request.NoteExcelRow;

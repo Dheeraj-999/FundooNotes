@@ -8,9 +8,7 @@ import org.springframework.context.annotation.Configuration;
 /*
  * Class Name  : ObjectMapperConfig
  * Description : Configures ObjectMapper bean for JSON processing.
- * Author      : Dheeraj Buchha
- * Note        : Refactored and maintained for FundooNotes (Original: Utkarsh Jain)
- * Date        : 16/11/2026
+ * Author      : Dheeraj Buchha * Date        : 16/11/2026
  */
 
 @Configuration

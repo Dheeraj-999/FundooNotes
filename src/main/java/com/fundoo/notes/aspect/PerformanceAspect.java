@@ -4,9 +4,7 @@ package com.fundoo.notes.aspect;
  * Class Name  : PerformanceAspect
  * Description : Centralized AOP profiling aspect measuring precise execution durations
  *               across service layer calls for bottleneck detection and SLA monitoring.
- * Author      : Dheeraj Buchha
- * Note        : Refactored and maintained for FundooNotes (Original: Utkarsh Jain)
- * Date        : 27/11/2026
+ * Author      : Dheeraj Buchha * Date        : 27/11/2026
  */
 
 import org.aspectj.lang.ProceedingJoinPoint;

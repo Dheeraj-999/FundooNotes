@@ -12,9 +12,7 @@ import org.springframework.stereotype.Component;
 /*
  * Class Name  : UserRegistrationEventConsumer
  * Description : Consumes user registration events from ActiveMQ.
- * Author      : Dheeraj Buchha
- * Note        : Refactored and maintained for FundooNotes (Original: Utkarsh Jain)
- * Date        : 16/11/2026
+ * Author      : Dheeraj Buchha * Date        : 16/11/2026
  */
 
 @Component

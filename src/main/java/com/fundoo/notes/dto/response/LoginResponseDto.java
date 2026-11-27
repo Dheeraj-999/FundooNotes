@@ -5,9 +5,7 @@ package com.fundoo.notes.dto.response;
  * Class Name  : LoginResponseDto
  * Description : Represents the response returned after
  *               successful user authentication.
- * Author      : Dheeraj Buchha
- * Note        : Refactored and maintained for FundooNotes (Original: Utkarsh Jain)
- * Date        : 14/11/2026
+ * Author      : Dheeraj Buchha * Date        : 14/11/2026
  */
 
 public class LoginResponseDto {

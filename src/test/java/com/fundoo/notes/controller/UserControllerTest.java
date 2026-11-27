@@ -21,9 +21,7 @@ import static org.mockito.Mockito.*;
  * Class Name  : UserControllerTest
  * Description : Tests REST controller responses for registration
  *               and login operations.
- * Author      : Dheeraj Buchha
- * Note        : Refactored and maintained for FundooNotes (Original: Utkarsh Jain)
- * Date        : 14/11/2026
+ * Author      : Dheeraj Buchha * Date        : 14/11/2026
  */
 @ExtendWith(MockitoExtension.class)
 class UserControllerTest {
@@ -41,7 +39,7 @@ class UserControllerTest {
 
         UserResponseDto response =
                 new UserResponseDto(
-                        1L, "Utakarsh", "utakarsh@example.com"
+                        1L, "Dheeraj", "dheeraj@example.com"
                 );
 
         when(userService.register(request)).thenReturn(response);

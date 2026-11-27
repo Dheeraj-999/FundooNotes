@@ -11,9 +11,7 @@ import static org.junit.jupiter.api.Assertions.*;
 /*
  * Class Name  : PasswordServiceImplTest
  * Description : Tests BCrypt password encoding and verification.
- * Author      : Dheeraj Buchha
- * Note        : Refactored and maintained for FundooNotes (Original: Utkarsh Jain)
- * Date        : 14/11/2026
+ * Author      : Dheeraj Buchha * Date        : 14/11/2026
  */
 class PasswordServiceImplTest {
 

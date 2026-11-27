@@ -10,9 +10,7 @@ import com.fundoo.notes.dto.response.UserResponseDto;
  * Class Name  : UserService
  * Description : Defines business operations for user registration
  *               and login.
- * Author      : Dheeraj Buchha
- * Note        : Refactored and maintained for FundooNotes (Original: Utkarsh Jain)
- * Date        : 14/11/2026
+ * Author      : Dheeraj Buchha * Date        : 14/11/2026
  */
 public interface UserService {
 

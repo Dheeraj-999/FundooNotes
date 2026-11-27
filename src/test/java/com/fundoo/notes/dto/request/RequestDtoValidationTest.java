@@ -15,9 +15,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * Class Name  : RequestDtoValidationTest
  * Description : Tests registration and login DTO validation,
  *               including blank fields and invalid email formats.
- * Author      : Dheeraj Buchha
- * Note        : Refactored and maintained for FundooNotes (Original: Utkarsh Jain)
- * Date        : 14/11/2026
+ * Author      : Dheeraj Buchha * Date        : 14/11/2026
  */
 
 class RequestDtoValidationTest {
@@ -42,8 +40,8 @@ class RequestDtoValidationTest {
     @Test
     void shouldAcceptValidRegistrationDetails() {
         UserRegisterRequestDto dto = new UserRegisterRequestDto();
-        dto.setFirstName("Utakarsh");
-        dto.setEmail("utakarsh@example.com");
+        dto.setFirstName("Dheeraj");
+        dto.setEmail("dheeraj@example.com");
         dto.setPassword("Password123");
 
         assertTrue(validator.validate(dto).isEmpty());
@@ -54,7 +52,7 @@ class RequestDtoValidationTest {
     void shouldRejectBlankFirstName() {
         UserRegisterRequestDto dto = new UserRegisterRequestDto();
         dto.setFirstName(" ");
-        dto.setEmail("utakarsh@example.com");
+        dto.setEmail("dheeraj@example.com");
         dto.setPassword("Password123");
 
         assertFalse(validator.validate(dto).isEmpty());
@@ -64,7 +62,7 @@ class RequestDtoValidationTest {
     @Test
     void shouldRejectInvalidRegistrationEmail() {
         UserRegisterRequestDto dto = new UserRegisterRequestDto();
-        dto.setFirstName("Utakarsh");
+        dto.setFirstName("Dheeraj");
         dto.setEmail("invalid-email");
         dto.setPassword("Password123");
 
@@ -75,8 +73,8 @@ class RequestDtoValidationTest {
     @Test
     void shouldRejectBlankRegistrationPassword() {
         UserRegisterRequestDto dto = new UserRegisterRequestDto();
-        dto.setFirstName("Utakarsh");
-        dto.setEmail("utakarsh@example.com");
+        dto.setFirstName("Dheeraj");
+        dto.setEmail("dheeraj@example.com");
         dto.setPassword("");
 
         assertFalse(validator.validate(dto).isEmpty());
@@ -86,7 +84,7 @@ class RequestDtoValidationTest {
     @Test
     void shouldAcceptValidLoginDetails() {
         LoginRequestDto dto = new LoginRequestDto();
-        dto.setEmail("utakarsh@example.com");
+        dto.setEmail("dheeraj@example.com");
         dto.setPassword("Password123");
 
         assertTrue(validator.validate(dto).isEmpty());
@@ -106,7 +104,7 @@ class RequestDtoValidationTest {
     @Test
     void shouldRejectBlankLoginPassword() {
         LoginRequestDto dto = new LoginRequestDto();
-        dto.setEmail("utakarsh@example.com");
+        dto.setEmail("dheeraj@example.com");
         dto.setPassword(" ");
 
         assertFalse(validator.validate(dto).isEmpty());

@@ -5,9 +5,7 @@ package com.fundoo.notes.service;
  * Class Name  : TokenService
  * Description : Defines operations for generating, validating
  *               and extracting information from JWT tokens.
- * Author      : Dheeraj Buchha
- * Note        : Refactored and maintained for FundooNotes (Original: Utkarsh Jain)
- * Date        : 14/11/2026
+ * Author      : Dheeraj Buchha * Date        : 14/11/2026
  */
 public interface TokenService {
 

@@ -4,9 +4,7 @@ package com.fundoo.notes.controller;
  * Class Name  : ReminderController
  * Description : Exposes REST APIs for scheduling, viewing, updating, and removing
  *               note reminders with RabbitMQ notification dispatching.
- * Author      : Dheeraj Buchha
- * Note        : Refactored and maintained for FundooNotes (Original: Utkarsh Jain)
- * Date        : 27/11/2026
+ * Author      : Dheeraj Buchha * Date        : 27/11/2026
  */
 
 import com.fundoo.notes.dto.request.ReminderRequestDto;

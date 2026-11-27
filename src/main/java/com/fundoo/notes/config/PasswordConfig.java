@@ -10,9 +10,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
  * Class Name  : PasswordConfig
  * Description : Configures BCrypt password encoding as a
  *               Spring-managed PasswordEncoder bean.
- * Author      : Dheeraj Buchha
- * Note        : Refactored and maintained for FundooNotes (Original: Utkarsh Jain)
- * Date        : 14/11/2026
+ * Author      : Dheeraj Buchha * Date        : 14/11/2026
  */
 @Configuration
 public class PasswordConfig {

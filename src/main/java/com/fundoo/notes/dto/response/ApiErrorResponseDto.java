@@ -3,9 +3,7 @@
  * Description : Represents a standardized API error response
  *               containing timestamp, status, error, message,
  *               request path and validation errors.
- * Author      : Dheeraj Buchha
- * Note        : Refactored and maintained for FundooNotes (Original: Utkarsh Jain)
- * Date        : 14/11/2026
+ * Author      : Dheeraj Buchha * Date        : 14/11/2026
  */
 
 package com.fundoo.notes.dto.response;

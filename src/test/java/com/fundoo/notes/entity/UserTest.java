@@ -9,9 +9,7 @@
  *
  * These tests do not require a database connection.
  *
- * Author      : Dheeraj Buchha
- * Note        : Refactored and maintained for FundooNotes (Original: Utkarsh Jain)
- * Date   : 14/11/2026
+ * Author      : Dheeraj Buchha * Date   : 14/11/2026
  */
 
 package com.fundoo.notes.entity;

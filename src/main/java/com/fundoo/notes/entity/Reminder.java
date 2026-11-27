@@ -7,9 +7,7 @@ import java.time.LocalDateTime;
 /*
  * Class Name  : Reminder
  * Description : Represents a scheduled reminder for a user's note.
- * Author      : Dheeraj Buchha
- * Note        : Refactored and maintained for FundooNotes (Original: Utkarsh Jain)
- * Date        : 26/11/2026
+ * Author      : Dheeraj Buchha * Date        : 26/11/2026
  */
 
 @Entity

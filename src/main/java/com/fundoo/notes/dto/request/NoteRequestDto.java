@@ -7,9 +7,7 @@ import jakarta.validation.constraints.NotBlank;
  * Class Name  : NoteRequestDto
  * Description : Accepts and validates note creation details
  *               received from the client.
- * Author      : Dheeraj Buchha
- * Note        : Refactored and maintained for FundooNotes (Original: Utkarsh Jain)
- * Date        : 14/11/2026
+ * Author      : Dheeraj Buchha * Date        : 14/11/2026
  */
 
 public class NoteRequestDto {

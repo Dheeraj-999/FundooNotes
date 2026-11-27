@@ -10,9 +10,7 @@ import java.util.Optional;
 /*
  * Interface Name : LabelRepository
  * Description    : Provides database operations for user labels.
- * Author      : Dheeraj Buchha
- * Note        : Refactored and maintained for FundooNotes (Original: Utkarsh Jain)
- * Date           : 25/11/2026
+ * Author      : Dheeraj Buchha * Date           : 25/11/2026
  */
 
 public interface LabelRepository extends JpaRepository<Label, Long> {

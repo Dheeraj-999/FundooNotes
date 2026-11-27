@@ -4,9 +4,7 @@ package com.fundoo.notes.dto.response;
 /*
  * Class Name  : LabelResponseDto
  * Description : Returns label details to the client.
- * Author      : Dheeraj Buchha
- * Note        : Refactored and maintained for FundooNotes (Original: Utkarsh Jain)
- * Date        : 25/11/2026
+ * Author      : Dheeraj Buchha * Date        : 25/11/2026
  */
 
 public class LabelResponseDto {

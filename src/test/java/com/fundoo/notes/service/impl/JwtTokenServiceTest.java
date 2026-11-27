@@ -12,9 +12,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * Class Name  : JwtTokenServiceTest
  * Description : Tests JWT generation, subject extraction,
  *               signature validation and token expiration.
- * Author      : Dheeraj Buchha
- * Note        : Refactored and maintained for FundooNotes (Original: Utkarsh Jain)
- * Date        : 14/11/2026
+ * Author      : Dheeraj Buchha * Date        : 14/11/2026
  */
 class JwtTokenServiceTest {
 

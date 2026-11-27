@@ -7,9 +7,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
  * Class Name  : PasswordHashGeneratorTest
  * Description : Generates a BCrypt hash for resetting
  *               a test user's password.
- * Author      : Dheeraj Buchha
- * Note        : Refactored and maintained for FundooNotes (Original: Utkarsh Jain)
- * Date        : 16/11/2026
+ * Author      : Dheeraj Buchha * Date        : 16/11/2026
  */
 class PasswordHashGeneratorTest {
 

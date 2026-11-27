@@ -3,9 +3,7 @@ package com.fundoo.notes.controller;
 /*
  * Class Name  : UserController
  * Description : Exposes REST endpoints for user registration and JWT authentication.
- * Author      : Dheeraj Buchha
- * Note        : Refactored and maintained for FundooNotes (Original: Utkarsh Jain)
- * Date        : 27/11/2026
+ * Author      : Dheeraj Buchha * Date        : 27/11/2026
  */
 
 import com.fundoo.notes.dto.request.LoginRequestDto;

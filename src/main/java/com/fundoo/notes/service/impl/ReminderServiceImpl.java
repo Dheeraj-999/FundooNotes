@@ -4,9 +4,7 @@ package com.fundoo.notes.service.impl;
  * Class Name  : ReminderServiceImpl
  * Description : Production service managing note reminders, asynchronous event
  *               dispatching via RabbitMQ, ownership validation, and scheduling.
- * Author      : Dheeraj Buchha
- * Note        : Refactored and maintained for FundooNotes (Original: Utkarsh Jain)
- * Date        : 27/11/2026
+ * Author      : Dheeraj Buchha * Date        : 27/11/2026
  */
 
 import com.fundoo.notes.dto.request.ReminderRequestDto;

@@ -8,9 +8,7 @@ import jakarta.validation.constraints.NotBlank;
  * Class Name  : LoginRequestDto
  * Description : Stores and validates the email and password
  *               submitted by a user during login.
- * Author      : Dheeraj Buchha
- * Note        : Refactored and maintained for FundooNotes (Original: Utkarsh Jain)
- * Date        : 14/11/2026
+ * Author      : Dheeraj Buchha * Date        : 14/11/2026
  */
 
 public class LoginRequestDto {

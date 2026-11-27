@@ -7,9 +7,7 @@ import java.util.List;
  * Class Name  : NoteResponseDto
  * Description : Represents note details and assigned labels
  *               returned to the client.
- * Author      : Dheeraj Buchha
- * Note        : Refactored and maintained for FundooNotes (Original: Utkarsh Jain)
- * Date        : 25/11/2026
+ * Author      : Dheeraj Buchha * Date        : 25/11/2026
  */
 
 public class NoteResponseDto {

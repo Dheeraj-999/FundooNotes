@@ -6,9 +6,7 @@ import java.time.LocalDateTime;
 /*
  * Class Name  : ReminderResponseDto
  * Description : Returns reminder details to the client.
- * Author      : Dheeraj Buchha
- * Note        : Refactored and maintained for FundooNotes (Original: Utkarsh Jain)
- * Date        : 26/11/2026
+ * Author      : Dheeraj Buchha * Date        : 26/11/2026
  */
 
 public class ReminderResponseDto {

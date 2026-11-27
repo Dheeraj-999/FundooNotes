@@ -4,9 +4,7 @@ package com.fundoo.notes.aspect;
  * Class Name  : LoggingAspect
  * Description : Centralized AOP logging aspect that intercepts service layer
  *               method invocations for structured diagnostic tracing and auditing.
- * Author      : Dheeraj Buchha
- * Note        : Refactored and maintained for FundooNotes (Original: Utkarsh Jain)
- * Date        : 27/11/2026
+ * Author      : Dheeraj Buchha * Date        : 27/11/2026
  */
 
 import org.aspectj.lang.JoinPoint;

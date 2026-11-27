@@ -5,9 +5,7 @@ package com.fundoo.notes.service.impl;
  * Description : Core service implementation managing user lifecycle, credential
  *               encryption with BCrypt, asynchronous registration event dispatching,
  *               and secure JWT generation.
- * Author      : Dheeraj Buchha
- * Note        : Refactored and maintained for FundooNotes (Original: Utkarsh Jain)
- * Date        : 27/11/2026
+ * Author      : Dheeraj Buchha * Date        : 27/11/2026
  */
 
 import com.fundoo.notes.dto.request.LoginRequestDto;

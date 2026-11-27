@@ -19,9 +19,7 @@ import org.springframework.beans.factory.annotation.Value;
 /*
  * Class Name  : RabbitMQConfig
  * Description : Configures RabbitMQ queue, exchange and message conversion.
- * Author      : Dheeraj Buchha
- * Note        : Refactored and maintained for FundooNotes (Original: Utkarsh Jain)
- * Date        : 16/11/2026
+ * Author      : Dheeraj Buchha * Date        : 16/11/2026
  */
 
 @Configuration

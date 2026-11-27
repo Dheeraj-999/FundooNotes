@@ -4,9 +4,7 @@ package com.fundoo.notes.controller;
  * Class Name  : ExcelImportController
  * Description : Securely handles bulk note imports via Excel (.xlsx) file uploads,
  *               validating authentication and triggering the Spring Batch import pipeline.
- * Author      : Dheeraj Buchha
- * Note        : Refactored and maintained for FundooNotes (Original: Utkarsh Jain)
- * Date        : 27/11/2026
+ * Author      : Dheeraj Buchha * Date        : 27/11/2026
  */
 
 import com.fundoo.notes.entity.User;

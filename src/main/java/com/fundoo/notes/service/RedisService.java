@@ -7,9 +7,7 @@ import java.util.concurrent.TimeUnit;
 /*
  * Class Name  : RedisService
  * Description : Defines Redis storage operations.
- * Author      : Dheeraj Buchha
- * Note        : Refactored and maintained for FundooNotes (Original: Utkarsh Jain)
- * Date        : 16/11/2026
+ * Author      : Dheeraj Buchha * Date        : 16/11/2026
  */
 
 public interface RedisService {

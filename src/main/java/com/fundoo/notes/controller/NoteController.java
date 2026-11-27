@@ -4,9 +4,7 @@ package com.fundoo.notes.controller;
  * Class Name  : NoteController
  * Description : Exposes REST endpoints for creating, retrieving, organizing,
  *               pinning, archiving, and trashing user notes.
- * Author      : Dheeraj Buchha
- * Note        : Refactored and maintained for FundooNotes (Original: Utkarsh Jain)
- * Date        : 27/11/2026
+ * Author      : Dheeraj Buchha * Date        : 27/11/2026
  */
 
 import com.fundoo.notes.dto.request.NoteRequestDto;

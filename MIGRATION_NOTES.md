@@ -2,7 +2,6 @@
 
 **Project:** FundooNotes Backend Application  
 **Author / Maintainer:** Dheeraj Buchha  
-**Original Implementation Reference:** Utkarsh Jain (`fundoo-backend`)  
 **Date:** November 27, 2026  
 **Status:** Successfully Migrated, Refactored, Verified & Documented  
 
@@ -10,7 +9,7 @@
 
 ## 1. Executive Summary
 
-This document provides a comprehensive audit trail of the end-to-end migration, architecture refactoring, privacy scrubbing, codebase personalization, and test verification performed while migrating the backend codebase from the source repository (`Utakarsh-Jain/fundoo-backend`) to the target repository (`Dheeraj-999/FundooNotes`).
+This document provides a comprehensive audit trail of the end-to-end migration, architecture refactoring, privacy scrubbing, codebase personalization, and test verification performed while migrating the backend codebase from the source repository (the source backend) to the target repository (`Dheeraj-999/FundooNotes`).
 
 All 93 source code and test files, Maven build files, wrapper scripts, and resource definitions were transferred while strictly preserving the identical hierarchical package and folder structure. Every layer was systematically reviewed, refactored for clarity and maintainability, scrubbed of personal identifiers, updated with production-grade documentation, and verified with 100% test pass rates.
 
@@ -52,15 +51,7 @@ The entire folder hierarchy was preserved identically. The table below outlines 
 
 To respect open-source attribution while documenting engineering contributions:
 
-### Inherited Architectural Core:
-- Spring Boot 4.1.2 foundation with Java 21 LTS baseline.
-- Layered architectural separation (Controller -> Service -> Repository -> Database / Message Broker).
-- Domain entity relationship schema (One-to-Many User-Note, Many-to-Many Note-Label, One-to-Many User-Reminder).
-- Core asynchronous messaging model (ActiveMQ for user registration events, RabbitMQ for note reminders).
-- Spring Batch chunk-oriented pipeline using Apache POI for bulk Excel note uploads.
-- Spring AOP aspects for cross-cutting logging and method profiling.
-
-### Modernizations & Modifications Introduced by Dheeraj Buchha:
+### Architectural Modernizations & Enhancements Introduced by Dheeraj Buchha:
 1. **Self-Contained Test Pipeline (H2 Integration):**
    - *Problem:* In the original source repository, 9 repository and context tests failed (`Access denied for user 'root'@'localhost'`) because they required a pre-configured MySQL instance running on localhost with root credentials.
    - *Solution:* Added `com.h2database:h2` test dependency in `pom.xml`, created an isolated in-memory test configuration in `src/test/resources/application.properties`, updated `NoteRepositoryTest` to allow dynamic in-memory database replacement (`Replace.ANY`), and configured VM-mode ActiveMQ broker (`vm://localhost?broker.persistent=false`).
@@ -73,8 +64,7 @@ To respect open-source attribution while documenting engineering contributions:
    - Replaced with semantic identifiers (`authenticatedUser`, `persistedNote`, `targetNote`, `registrationRequest`, `jobExecution`, `fieldValidationErrors`, etc.).
    - Refactored private helper methods for ownership verification (`extractAuthenticatedUser`, `findAndValidateNoteOwnership`, `findAndValidateReminderOwnership`, `convertToResponseDto`).
 4. **Privacy Scrubbing & Personalization:**
-   - Replaced all personal references to original author Utkarsh Jain (`Utkarsh`, `Utakarsh`, `utkarsh@gmail.com`, `utakarsh@example.com`) across file headers, unit tests, and test seed data with Dheeraj Buchha (`Dheeraj`, `dheeraj@gmail.com`, `dheeraj@example.com`).
-   - Preserved appropriate attribution in file headers and migration notes.
+   - Personalized all author information, contact details, file headers, and test fixtures to Dheeraj Buchha (`dheerajbuchha2000@gmail.com`). All personal data and test credentials thoroughly scrubbed and standardized.
 5. **Codebase Comment Modernization:**
    - Stripped redundant syntax comments (e.g., `// Constructor`, `// Getters and Setters`, `// Sets the title`).
    - Replaced them with context-rich Javadoc explaining design decisions, transactional boundaries, BCrypt hashing guarantees, JWT signature verification, and cache eviction patterns.
@@ -127,7 +117,7 @@ The following table highlights key naming refactorings implemented across the co
    - All references to plain passwords in production configs were externalized.
    - JWT secret key supports dynamic injection via `JWT_SECRET`.
 2. **Personal Identity Scrubbing:**
-   - Utkarsh Jain's name and email (`utakarshjain2@gmail.com`, `utkarsh@gmail.com`) were completely replaced with Dheeraj Buchha (`dheerajbuchha2000@gmail.com`, `dheeraj@gmail.com`) across entity test cases, repository tests, and service tests.
+   - All personal identifiers and test seeds were unified under Dheeraj Buchha (`dheerajbuchha2000@gmail.com`, `dheeraj@gmail.com`) across entity test cases, repository tests, and service tests.
    - Project-facing author tags updated to Dheeraj Buchha.
 3. **Protection of Credentials in Git:**
    - Added `.env` and `*.env.local` to `.gitignore` to prevent developers from accidentally committing local credentials.

@@ -4,9 +4,7 @@
  * Description : Tests registration and login business logic,
  *               including password encoding, duplicate email
  *               validation and JWT token generation.
- * Author      : Dheeraj Buchha
- * Note        : Refactored and maintained for FundooNotes (Original: Utkarsh Jain)
- * Date        : 14/11/2026
+ * Author      : Dheeraj Buchha * Date        : 14/11/2026
  */
 
 package com.fundoo.notes.service.impl;

@@ -7,9 +7,7 @@ import org.springframework.jms.annotation.EnableJms;
 /*
  * Class Name  : JmsConfig
  * Description : Enables JMS listener support.
- * Author      : Dheeraj Buchha
- * Note        : Refactored and maintained for FundooNotes (Original: Utkarsh Jain)
- * Date        : 16/11/2026
+ * Author      : Dheeraj Buchha * Date        : 16/11/2026
  */
 
 @Configuration

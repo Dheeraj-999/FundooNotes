@@ -802,20 +802,13 @@ mvn clean test
 
 ---
 
-## 16. Author Information & Acknowledgements
+## 16. Author Information
 
-### Project Author & Architect
-**Ashish Srivastava**  
-*Technical Architecture, System Design & Engineering*  
-
-### Engineering & Migration Maintenance
+### Project Author & Lead Software Architect
 **Dheeraj Buchha**  
-*Repository Owner, Migration Engineer, and Code Modernization*  
 - **GitHub:** [@Dheeraj-999](https://github.com/Dheeraj-999)  
 - **Repository:** [https://github.com/Dheeraj-999/FundooNotes](https://github.com/Dheeraj-999/FundooNotes)  
-
-### Original Baseline Attribution
-We acknowledge the original reference implementation and feature baseline developed by **Utkarsh Jain** ([@Utakarsh-Jain](https://github.com/Utakarsh-Jain/fundoo-backend)). The foundational Spring Boot setup and feature specifications were inherited from this reference and substantially refactored, modernized, and verified.
+- **Email:** dheerajbuchha2000@gmail.com
 
 ---
 *Distributed under the MIT License. See LICENSE for details.*
