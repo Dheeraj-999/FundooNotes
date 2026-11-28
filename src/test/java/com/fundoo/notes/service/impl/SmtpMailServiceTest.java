@@ -17,6 +17,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.test.util.ReflectionTestUtils;
 
+import java.time.LocalDateTime;
 import java.util.Properties;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -51,6 +52,26 @@ class SmtpMailServiceTest {
         assertEquals("ada@example.com", message.getRecipients(Message.RecipientType.TO)[0].toString());
         assertTrue(message.getContent().toString().contains("123456"));
         assertTrue(message.getContent().toString().contains("5 minute(s)"));
+    }
+
+    @Test
+    void sendsADueReminderEmailWithTheNoteTitleAndTime() throws Exception {
+        service.sendReminder(
+                "ada@example.com",
+                "Launch plan",
+                LocalDateTime.of(2026, 11, 30, 10, 15));
+
+        ArgumentCaptor<MimeMessagePreparator> captor =
+                ArgumentCaptor.forClass(MimeMessagePreparator.class);
+        verify(mailSender).send(captor.capture());
+
+        MimeMessage message = new MimeMessage(Session.getInstance(new Properties()));
+        captor.getValue().prepare(message);
+
+        assertEquals("Reminder: Launch plan", message.getSubject());
+        assertEquals("ada@example.com", message.getRecipients(Message.RecipientType.TO)[0].toString());
+        assertTrue(message.getContent().toString().contains("Launch plan"));
+        assertTrue(message.getContent().toString().contains("30 Nov 2026 at 10:15"));
     }
 
     @Test

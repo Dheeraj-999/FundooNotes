@@ -21,6 +21,10 @@ public class Reminder {
     @Column(nullable = false)
     private LocalDateTime reminderTime;
 
+    /** Set once the due reminder has been emailed, so it is never sent twice. */
+    @Column(name = "notified_at")
+    private LocalDateTime notifiedAt;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
@@ -52,6 +56,14 @@ public class Reminder {
 
     public void setReminderTime(LocalDateTime reminderTime) {
         this.reminderTime = reminderTime;
+    }
+
+    public LocalDateTime getNotifiedAt() {
+        return notifiedAt;
+    }
+
+    public void setNotifiedAt(LocalDateTime notifiedAt) {
+        this.notifiedAt = notifiedAt;
     }
 
     public User getUser() {

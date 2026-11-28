@@ -6,6 +6,7 @@ import com.fundoo.notes.entity.Reminder;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,4 +27,7 @@ public interface ReminderRepository extends JpaRepository<Reminder, Long> {
 
     // Checks whether a note already has a reminder for a user.
     Optional<Reminder> findByNoteIdAndUserId(Long noteId, Long userId);
+
+    // Due reminders that have not been emailed yet.
+    List<Reminder> findByNotifiedAtIsNullAndReminderTimeLessThanEqual(LocalDateTime now);
 }

@@ -1,7 +1,11 @@
 package com.fundoo.notes.service;
 
-/* Abstraction over the SMTP transport so password reset logic stays testable. */
+import java.time.LocalDateTime;
+
+/* Abstraction over the SMTP transport so mail logic stays testable. */
 public interface MailService {
 
     void sendPasswordResetOtp(String email, String otp);
+
+    void sendReminder(String email, String noteTitle, LocalDateTime reminderTime);
 }

@@ -104,6 +104,7 @@ public class ReminderServiceImpl implements ReminderService {
 
         Reminder targetReminder = findAndValidateReminderOwnership(reminderId, authenticatedUser);
         targetReminder.setReminderTime(reminderRequest.getReminderTime());
+        targetReminder.setNotifiedAt(null);
 
         Reminder updatedReminder = reminderRepository.save(targetReminder);
         publishReminderEvent(updatedReminder, authenticatedUser);

@@ -14,14 +14,19 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 /*
  * Class Name  : SmtpMailService
- * Description : Sends the password-reset verification code over SMTP.
+ * Description : Sends password-reset codes and due reminder notifications over SMTP.
  */
 @Service
 public class SmtpMailService implements MailService {
 
     private static final Logger logger = LoggerFactory.getLogger(SmtpMailService.class);
+    private static final DateTimeFormatter REMINDER_TIME_FORMAT =
+            DateTimeFormatter.ofPattern("dd MMM yyyy 'at' HH:mm");
 
     private final JavaMailSender mailSender;
     private final String fromAddress;
@@ -49,6 +54,24 @@ public class SmtpMailService implements MailService {
                 + "If you did not request this, you can ignore this email.\n\n"
                 + "— The Fundoo Notes team";
 
+        sendEmail(email, subject, body);
+        logger.info("Password reset code emailed to {}", email);
+    }
+
+    @Override
+    public void sendReminder(String email, String noteTitle, LocalDateTime reminderTime) {
+        String subject = "Reminder: " + noteTitle;
+        String body = "Hello,\n\n"
+                + "This is a reminder for your Fundoo Notes note:\n\n"
+                + noteTitle + "\n\n"
+                + "Scheduled for " + reminderTime.format(REMINDER_TIME_FORMAT) + ".\n\n"
+                + "— The Fundoo Notes team";
+
+        sendEmail(email, subject, body);
+        logger.info("Reminder email sent to {} for note '{}'", email, noteTitle);
+    }
+
+    private void sendEmail(String email, String subject, String body) {
         MimeMessagePreparator preparator = message -> {
             if (!fromAddress.isBlank()) {
                 message.setFrom(new InternetAddress(fromAddress));
@@ -60,10 +83,9 @@ public class SmtpMailService implements MailService {
 
         try {
             mailSender.send(preparator);
-            logger.info("Password reset code emailed to {}", email);
         } catch (MailException exception) {
-            logger.error("Failed to email password reset code to {}", email, exception);
-            throw new EmailDeliveryException("Unable to send the verification email. Please try again later.");
+            logger.error("Failed to email {} to {}", subject, email, exception);
+            throw new EmailDeliveryException("Unable to send the email. Please try again later.");
         }
     }
 }
