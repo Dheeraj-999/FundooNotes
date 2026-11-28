@@ -49,3 +49,21 @@ message as known ones, so the endpoint cannot be used to enumerate accounts.
 
 The old debug endpoints `POST /api/redis/otp/generate` and `/otp/verify` were removed:
 they returned the code in the HTTP response, which allowed account takeover.
+
+## 4. Reminder emails
+
+The same SMTP settings deliver due reminder emails. `ReminderDispatchService` polls
+the database every 30 seconds and emails each reminder once when its time arrives;
+the `notified_at` column prevents duplicates. If delivery fails, the reminder stays
+unmarked and is retried on the next tick.
+
+Optional overrides:
+
+| Variable | Default | Purpose |
+| --- | --- | --- |
+| `APP_REMINDER_CHECK_INTERVAL_MS` | `30000` | How often the scheduler looks for due reminders |
+| `APP_REMINDER_INITIAL_DELAY_MS` | `10000` | Delay before the first check after startup |
+
+The backend must remain running for these emails to be sent. The frontend shows a
+browser notification and chime when the tab is open; the email is the backup when it
+is closed.
