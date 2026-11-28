@@ -46,6 +46,14 @@ public class GlobalExceptionHandler {
         return constructErrorResponse(HttpStatus.NOT_FOUND, exception.getMessage(), request, null);
     }
 
+    @ExceptionHandler(NoteNotInTrashException.class)
+    public ResponseEntity<ApiErrorResponseDto> handleNoteNotInTrash(
+            NoteNotInTrashException exception,
+            HttpServletRequest request) {
+
+        return constructErrorResponse(HttpStatus.BAD_REQUEST, exception.getMessage(), request, null);
+    }
+
     @ExceptionHandler(InvalidCredentialsException.class)
     public ResponseEntity<ApiErrorResponseDto> handleInvalidCredentials(
             InvalidCredentialsException exception,

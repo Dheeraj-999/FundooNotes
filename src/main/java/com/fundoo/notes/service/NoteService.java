@@ -21,6 +21,11 @@ public interface NoteService {
     // Retrieves all notes belonging to the authenticated user.
     List<NoteResponseDto> getAllNotes(String token);
 
+    // Updates the title and description of an authenticated user's note.
+    NoteResponseDto updateNote(Long noteId, NoteRequestDto requestDto, String token);
+
+    // Permanently deletes a note that is already in the user's trash.
+    void deleteNotePermanently(Long noteId, String token);
 
     // Toggles the pin status of an authenticated user's note.
     NoteResponseDto togglePin(Long noteId, String token);

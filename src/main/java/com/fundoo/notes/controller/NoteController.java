@@ -60,6 +60,40 @@ public class NoteController {
     }
 
     /**
+     * Updates the title and description of an owned note.
+     *
+     * @param noteId      target note primary key
+     * @param noteRequest validated replacement details
+     * @param token       JWT authorization token
+     * @return HTTP 200 OK with the updated note
+     */
+    @PutMapping("/{noteId}")
+    public ResponseEntity<NoteResponseDto> updateNote(
+            @PathVariable Long noteId,
+            @Valid @RequestBody NoteRequestDto noteRequest,
+            @RequestHeader("Authorization") String token) {
+
+        NoteResponseDto updatedNote = noteService.updateNote(noteId, noteRequest, token);
+        return ResponseEntity.ok(updatedNote);
+    }
+
+    /**
+     * Permanently deletes a note that is already in the user's trash.
+     *
+     * @param noteId target note primary key
+     * @param token  JWT authorization token
+     * @return HTTP 204 No Content
+     */
+    @DeleteMapping("/{noteId}")
+    public ResponseEntity<Void> deleteNote(
+            @PathVariable Long noteId,
+            @RequestHeader("Authorization") String token) {
+
+        noteService.deleteNotePermanently(noteId, token);
+        return ResponseEntity.noContent().build();
+    }
+
+    /**
      * Toggles the pinned status of a note.
      *
      * @param noteId target note primary key
