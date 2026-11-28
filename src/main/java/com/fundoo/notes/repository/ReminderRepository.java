@@ -30,4 +30,7 @@ public interface ReminderRepository extends JpaRepository<Reminder, Long> {
 
     // Due reminders that have not been emailed yet.
     List<Reminder> findByNotifiedAtIsNullAndReminderTimeLessThanEqual(LocalDateTime now);
+
+    // Removes reminders attached to a note before the note itself is deleted.
+    void deleteByNoteId(Long noteId);
 }

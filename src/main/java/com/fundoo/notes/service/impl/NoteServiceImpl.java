@@ -13,8 +13,10 @@ import com.fundoo.notes.dto.response.NoteResponseDto;
 import com.fundoo.notes.entity.Note;
 import com.fundoo.notes.entity.User;
 import com.fundoo.notes.exception.InvalidCredentialsException;
+import com.fundoo.notes.exception.NoteNotInTrashException;
 import com.fundoo.notes.exception.NoteNotFoundException;
 import com.fundoo.notes.repository.NoteRepository;
+import com.fundoo.notes.repository.ReminderRepository;
 import com.fundoo.notes.repository.UserRepository;
 import com.fundoo.notes.service.NoteService;
 import com.fundoo.notes.service.TokenService;
@@ -36,15 +38,18 @@ public class NoteServiceImpl implements NoteService {
     private final NoteRepository noteRepository;
     private final UserRepository userRepository;
     private final TokenService tokenService;
+    private final ReminderRepository reminderRepository;
 
     public NoteServiceImpl(
             NoteRepository noteRepository,
             UserRepository userRepository,
-            TokenService tokenService) {
+            TokenService tokenService,
+            ReminderRepository reminderRepository) {
 
         this.noteRepository = noteRepository;
         this.userRepository = userRepository;
         this.tokenService = tokenService;
+        this.reminderRepository = reminderRepository;
     }
 
     @Override
@@ -79,6 +84,41 @@ public class NoteServiceImpl implements NoteService {
         return userNotes.stream()
                 .map(this::convertToResponseDto)
                 .toList();
+    }
+
+    @Override
+    @Transactional
+    @CacheEvict(value = "notes", allEntries = true)
+    public NoteResponseDto updateNote(Long noteId, NoteRequestDto noteRequest, String authorizationToken) {
+        logger.info("Updating Note ID: {}", noteId);
+        Note targetNote = findAndValidateNoteOwnership(noteId, authorizationToken);
+
+        targetNote.setTitle(noteRequest.getTitle().trim());
+        targetNote.setDescription(noteRequest.getDescription());
+
+        Note updatedNote = noteRepository.save(targetNote);
+        logger.info("Successfully updated Note ID: {}", noteId);
+
+        return convertToResponseDto(updatedNote);
+    }
+
+    @Override
+    @Transactional
+    @CacheEvict(value = "notes", allEntries = true)
+    public void deleteNotePermanently(Long noteId, String authorizationToken) {
+        logger.info("Permanently deleting Note ID: {}", noteId);
+        Note targetNote = findAndValidateNoteOwnership(noteId, authorizationToken);
+
+        if (!targetNote.isTrashed()) {
+            logger.warn("Permanent delete rejected: Note ID: {} is not in trash", noteId);
+            throw new NoteNotInTrashException("Move the note to trash before deleting it permanently");
+        }
+
+        // Clear dependent rows first so the foreign keys do not block the delete.
+        reminderRepository.deleteByNoteId(noteId);
+        targetNote.getLabels().clear();
+        noteRepository.delete(targetNote);
+        logger.info("Successfully deleted Note ID: {}", noteId);
     }
 
     @Override
