@@ -99,6 +99,22 @@ public class GlobalExceptionHandler {
         return constructErrorResponse(HttpStatus.CONFLICT, exception.getMessage(), request, null);
     }
 
+    @ExceptionHandler(InvalidOtpException.class)
+    public ResponseEntity<ApiErrorResponseDto> handleInvalidOtp(
+            InvalidOtpException exception,
+            HttpServletRequest request) {
+
+        return constructErrorResponse(HttpStatus.BAD_REQUEST, exception.getMessage(), request, null);
+    }
+
+    @ExceptionHandler(EmailDeliveryException.class)
+    public ResponseEntity<ApiErrorResponseDto> handleEmailDeliveryFailure(
+            EmailDeliveryException exception,
+            HttpServletRequest request) {
+
+        return constructErrorResponse(HttpStatus.SERVICE_UNAVAILABLE, exception.getMessage(), request, null);
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiErrorResponseDto> handleGenericException(
             Exception exception,
